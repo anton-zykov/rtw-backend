@@ -1,0 +1,38 @@
+{
+  "name": "rtw-backend",
+  "version": "1.0.0",
+  "description": "",
+  "homepage": "https://github.com/anton-zykov/rtw-backend#readme",
+  "bugs": {
+    "url": "https://github.com/anton-zykov/rtw-backend/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/anton-zykov/rtw-backend.git"
+  },
+  "license": "ISC",
+  "author": "",
+  "type": "module",
+  "imports": {
+    "#/*": {
+      "development": "./src/*",
+      "default": "./dist/*"
+    }
+  },
+  "main": "index.js",
+  "scripts": {
+    "dev": "node --conditions=development --import tsx --watch ./src/index.ts",
+    "typecheck": "tsc --noEmit",
+    "build": "tsc -p tsconfig.build.json",
+    "start": "node dist/index.js",
+    "test": "node --conditions=development --import tsx --test \"test/**/*.test.ts\""
+  },
+  "dependencies": {
+    "fastify": "^5.6.1"
+  },
+  "devDependencies": {
+    "@types/node": "^24.5.2",
+    "tsx": "^4.20.5",
+    "typescript": "^5.9.2"
+  }
+}
