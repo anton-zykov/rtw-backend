@@ -1,6 +1,6 @@
 import type { FastifyInstance } from 'fastify';
 
-export default async function healthRoutes (app: FastifyInstance) {
+export async function healthRoutes (app: FastifyInstance) {
   app.get('/health', {
     schema: {
       response: {
