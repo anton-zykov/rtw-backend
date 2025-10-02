@@ -8,7 +8,7 @@ declare module 'fastify' {
   }
 }
 
-export const prismaPlugin: FastifyPluginAsync = fp(async (server, _options) => {
+export const prismaPlugin: FastifyPluginAsync = fp(async (server, _opts) => {
   const prisma = new PrismaClient();
 
   await prisma.$connect();
