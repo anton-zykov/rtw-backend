@@ -1,0 +1,23 @@
+model TaskTricky {
+  id       String              @id @default(uuid())
+  age      Int
+  options  Json                @db.JsonB // { word: string; correct: boolean }
+  students StudentTaskTricky[]
+}
+
+model StudentTaskTricky {
+  studentId  Int
+  taskId     String
+  weight     Int        @default(10)
+
+  timesSeen  Int        @default(0)
+  lastSeenAt DateTime?  @db.Timestamptz(3)
+
+  student    Student    @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  task       TaskTricky @relation(fields: [taskId], references: [id], onDelete: Cascade)
+
+  @@id([studentId, taskId])
+  @@index([studentId])
+  @@index([taskId])
+}
+
