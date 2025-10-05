@@ -3,7 +3,7 @@ import { defineConfig } from 'vitest/config';
 export default defineConfig({
   test: {
     environment: 'node',
-    setupFiles: ['test/prismaMock.ts'],
+    // setupFiles: ['test/prismaMock.ts'],
     clearMocks: true,
     reporters: ['default'],
     coverage: {

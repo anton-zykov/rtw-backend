@@ -3,9 +3,9 @@ import type { FastifyPluginAsync, FastifyInstance } from 'fastify';
 import { Telegraf, type Context } from 'telegraf';
 import { message } from 'telegraf/filters';
 
-export interface TelegramPluginOptions {
+export type TelegramPluginOptions = {
   token: string | undefined;
-}
+};
 
 declare module 'fastify' {
   interface FastifyInstance {
@@ -19,7 +19,10 @@ export const telegramPlugin: FastifyPluginAsync<TelegramPluginOptions> = fp(
       token
     } = opts;
 
-    if (!token) throw new Error('Telegram token is required');
+    if (!token) {
+      server.log.warn('Telegram token is not set, skipping plugin');
+      return;
+    }
 
     const bot = new Telegraf<Context>(token);
     bot.start((ctx) => ctx.reply('Hello!'));

@@ -1,9 +1,16 @@
 import { createUser } from '#/services/users/createUser.js';
-import { prismaMock } from '#/../test/prismaMock.js';
-import { test, expect } from 'vitest';
+import { prisma } from '#/libs/__mocks__/prisma.js';
+import { vi, beforeEach, test, expect } from 'vitest';
+import { mockReset } from 'vitest-mock-extended';
+
+vi.mock('#/libs/prisma.js');
+
+beforeEach(() => {
+  mockReset(prisma);
+});
 
 test('should create new user ', async () => {
-  prismaMock.user.create.mockResolvedValue({
+  prisma.user.create.mockResolvedValue({
     id: 1,
     login: 'Rich',
     fullName: null,
@@ -16,5 +23,5 @@ test('should create new user ', async () => {
 
   const user = await createUser({ login: 'Rich' });
   expect(user.login).toBe('Rich');
-  expect(prismaMock.user.create).toHaveBeenCalledWith({ data: { login: 'Rich' } });
+  expect(prisma.user.create).toHaveBeenCalledWith({ data: { login: 'Rich' } });
 });

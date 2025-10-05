@@ -1,8 +1,8 @@
-import { prisma } from '#/prisma.js';
+import { prisma } from '#/libs/prisma.js';
 
-export interface CreateUserInput {
+export type CreateUserInput = {
   login: string;
-}
+};
 
 export async function createUser (input: CreateUserInput) {
   const user = await prisma.user.create({

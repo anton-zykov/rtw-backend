@@ -1,13 +1,21 @@
-import fastify from 'fastify';
+import fastify, { type FastifyPluginAsync } from 'fastify';
+import type { TelegramPluginOptions } from '#/plugins/telegram.js';
 import { healthRoutes } from '#/routes/health.js';
-import { prismaPlugin } from '#/plugins/prisma.js';
-import { telegramPlugin } from '#/plugins/telegram.js';
 
-export function buildServer () {
-  const app = fastify({ logger: true });
+type BuildDeps = {
+  prismaPlugin: FastifyPluginAsync;
+  telegramPlugin: FastifyPluginAsync<TelegramPluginOptions>;
+  config: {
+    logger: boolean;
+    telegram: TelegramPluginOptions;
+  };
+};
 
-  app.register(prismaPlugin);
-  app.register(telegramPlugin, { token: process.env['TELEGRAM_BOT_TOKEN'] });
+export function buildServer (deps: BuildDeps) {
+  const app = fastify({ logger: deps.config.logger });
+
+  app.register(deps.prismaPlugin);
+  app.register(deps.telegramPlugin, { token: deps.config.telegram.token });
   app.register(healthRoutes, { prefix: '/api' });
 
   return app;
