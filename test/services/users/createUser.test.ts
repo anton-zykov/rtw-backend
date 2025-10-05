@@ -1,22 +1,20 @@
 import { createUser } from '#/services/users/createUser.js';
 import { prismaMock } from '#/../test/prismaMock.js';
+import { test, expect } from 'vitest';
 
 test('should create new user ', async () => {
-  const user = {
+  prismaMock.user.create.mockResolvedValue({
+    id: 1,
     login: 'Rich',
-    // passwordHash: 'placeholder',
-    // passwordVersion: 0,
-    // createdAt: new Date(),
-    // updatedAt: new Date(),
-    // id: 1,
-    // fullName: null,
-    // email: null,
-    // telegramId: null
-  };
+    fullName: null,
+    email: null,
+    passwordHash: null,
+    passwordVersion: 0,
+    createdAt: new Date(),
+    updatedAt: new Date(),
+  } as any);
 
-  prismaMock.user.create.mockResolvedValue(user);
-
-  await expect(createUser(user)).resolves.toEqual({
-    login: 'Rich',
-  });
+  const user = await createUser({ login: 'Rich' });
+  expect(user.login).toBe('Rich');
+  expect(prismaMock.user.create).toHaveBeenCalledWith({ data: { login: 'Rich' } });
 });

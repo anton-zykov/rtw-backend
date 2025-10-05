@@ -15,7 +15,7 @@
     "lib": ["esnext"],
     "types": [
       "node",
-      "jest"
+      "vitest/globals"
     ],
     "baseUrl": ".",
     "paths": {
@@ -50,6 +50,7 @@
   "include": [
     "@types",
     "src/**/*.ts",
-    "test/**/*.ts"
+    "test/**/*.ts",
+    "vitest.config.ts"
   ]
 }
