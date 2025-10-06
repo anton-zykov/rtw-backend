@@ -25,7 +25,7 @@
     "typecheck": "tsc --noEmit",
     "build": "tsc -p tsconfig.build.json",
     "start": "node dist/index.js",
-    "test": "node --conditions=development --import tsx --test \"test/**/*.test.ts\""
+    "test": "vitest"
   },
   "dependencies": {
     "@prisma/client": "^6.16.3",
