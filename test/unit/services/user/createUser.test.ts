@@ -1,4 +1,4 @@
-import { createUser } from '#/services/users/createUser.js';
+import { createUser } from '#/services/user/createUser.js';
 import { prisma } from '#/libs/__mocks__/prisma.js';
 import { vi, beforeEach, test, expect } from 'vitest';
 import { mockReset } from 'vitest-mock-extended';
