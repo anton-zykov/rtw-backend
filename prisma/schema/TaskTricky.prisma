@@ -1,11 +1,11 @@
-model TaskTricky {
+model TrickyTask {
   id       String              @id @default(uuid())
   age      Int
   options  Json                @db.JsonB // { word: string; correct: boolean }
-  students StudentTaskTricky[]
+  students StudentTrickyTask[]
 }
 
-model StudentTaskTricky {
+model StudentTrickyTask {
   studentId  Int
   taskId     String
   weight     Int        @default(10)
@@ -14,7 +14,7 @@ model StudentTaskTricky {
   lastSeenAt DateTime?  @db.Timestamptz(3)
 
   student    Student    @relation(fields: [studentId], references: [id], onDelete: Cascade)
-  task       TaskTricky @relation(fields: [taskId], references: [id], onDelete: Cascade)
+  task       TrickyTask @relation(fields: [taskId], references: [id], onDelete: Cascade)
 
   @@id([studentId, taskId])
   @@index([studentId])

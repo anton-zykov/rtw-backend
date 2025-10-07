@@ -15,9 +15,9 @@ model User {
 model Student {
   id            Int                   @unique
   user          User                  @relation(fields: [id], references: [id])
-  tasksGenitive StudentTaskGenitive[]
-  tasksStress   StudentTaskStress[]
-  tasksTricky   StudentTaskTricky[]
+  genitiveTasks StudentGenitiveTask[]
+  stressTasks   StudentStressTask[]
+  trickyTasks   StudentTrickyTask[]
 }
 
 model Admin {
