@@ -1,4 +1,4 @@
-import { createTrickyTasks } from '#/services/trickyTasks/createTrickyTasks.js';
+import { createTrickyTasks } from '#/services/trickyTask/createTrickyTasks.js';
 import { prisma } from '#/libs/__mocks__/prisma.js';
 import { vi, beforeEach, test, expect } from 'vitest';
 import { mockReset } from 'vitest-mock-extended';
