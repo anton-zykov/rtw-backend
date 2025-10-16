@@ -7,6 +7,7 @@ import fastify, {
   type RawServerDefault,
 } from 'fastify';
 import type { TelegramPluginOptions } from '#/plugins/telegram.js';
+import type { PrismaPluginOptions } from '#/plugins/prisma.js';
 import {
   type ZodTypeProvider,
   validatorCompiler,
@@ -24,11 +25,12 @@ export type FastifyZodInstance = FastifyInstance<
 >;
 
 type BuildDeps = {
-  prismaPlugin: FastifyPluginAsync;
+  prismaPlugin: FastifyPluginAsync<PrismaPluginOptions>;
   telegramPlugin: FastifyPluginAsync<TelegramPluginOptions>;
   config: {
     logger: boolean;
     telegram: TelegramPluginOptions;
+    prisma: PrismaPluginOptions;
   };
 };
 
@@ -37,7 +39,7 @@ export function buildServer (deps: BuildDeps): FastifyZodInstance {
 
   app.setValidatorCompiler(validatorCompiler);
   app.setSerializerCompiler(serializerCompiler);
-  app.register(deps.prismaPlugin);
+  app.register(deps.prismaPlugin, { prismaClient: deps.config.prisma.prismaClient });
   app.register(deps.telegramPlugin, { token: deps.config.telegram.token });
   app.register(healthRoutes, { prefix: '/api' });
   app.register(userRoutes, { prefix: '/api' });

@@ -20,7 +20,7 @@ const CreateUserReply = z.object({
 });
 
 export async function userRoutes (app: FastifyZodInstance) {
-  app.post('/user', {
+  app.post('/user/create', {
     schema: {
       body: CreateUserBody,
       response: {
@@ -28,7 +28,7 @@ export async function userRoutes (app: FastifyZodInstance) {
       },
     },
   }, async (req, reply) => {
-    const user = await createUser(req.body);
+    const user = await createUser(app.prisma, req.body);
     reply.status(201).send(user);
   });
 }

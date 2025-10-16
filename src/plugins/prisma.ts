@@ -1,7 +1,10 @@
 import fp from 'fastify-plugin';
-import type { FastifyPluginAsync } from 'fastify';
+import type { FastifyInstance, FastifyPluginAsync } from 'fastify';
 import type { PrismaClient } from '@prisma/client';
-import { prisma } from '#/libs/prisma.js';
+
+export type PrismaPluginOptions = {
+  prismaClient: PrismaClient;
+};
 
 declare module 'fastify' {
   interface FastifyInstance {
@@ -9,14 +12,12 @@ declare module 'fastify' {
   }
 }
 
-export const prismaPlugin: FastifyPluginAsync = fp(
-  async (server, _opts) => {
-    await prisma.$connect();
-
-    server.decorate('prisma', prisma);
-
-    server.addHook('onClose', async (server) => {
-      await server.prisma.$disconnect();
-    });
+export const prismaPlugin: FastifyPluginAsync<{ prismaClient: PrismaClient }> = fp(
+  async (app: FastifyInstance, opts: PrismaPluginOptions) => {
+    await opts.prismaClient.$connect();
+    app.decorate('prisma', opts.prismaClient);
+    app.addHook('onClose', () => opts.prismaClient.$disconnect());
+  }, {
+    name: 'prisma',
   }
 );

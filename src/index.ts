@@ -2,6 +2,7 @@ import 'dotenv/config';
 import { buildServer } from '#/server.js';
 import { prismaPlugin } from '#/plugins/prisma.js';
 import { telegramPlugin } from '#/plugins/telegram.js';
+import { PrismaClient } from '@prisma/client';
 
 const port = Number(process.env['PORT'] ?? 3000);
 const host = process.env['HOST'] ?? '0.0.0.0';
@@ -13,6 +14,9 @@ const app = buildServer({
     logger: true,
     telegram: {
       token: process.env['TELEGRAM_BOT_TOKEN']
+    },
+    prisma: {
+      prismaClient: new PrismaClient()
     }
   }
 });

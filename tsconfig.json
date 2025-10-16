@@ -14,8 +14,7 @@
     "target": "esnext",
     "lib": ["esnext"],
     "types": [
-      "node",
-      "vitest/globals"
+      "node"
     ],
     "baseUrl": ".",
     "paths": {

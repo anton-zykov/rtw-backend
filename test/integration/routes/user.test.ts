@@ -3,12 +3,10 @@ import { prismaPlugin } from '#/plugins/prisma.js';
 import { telegramPlugin } from '#/plugins/__mocks__/telegram.js';
 import type { PrismaClient } from '@prisma/client';
 
-import { afterAll, assert, beforeAll, describe, it } from 'vitest';
+import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { mockDeep } from 'vitest-mock-extended';
 
-// TODO: prisma mock reset??
-
-describe('health', () => {
+describe('user create', () => {
   let app: FastifyZodInstance;
   const prismaMock = mockDeep<PrismaClient>();
   Object.defineProperty(prismaMock, 'getter', { value: () => prismaMock });
@@ -32,9 +30,25 @@ describe('health', () => {
 
   afterAll(async () => await app.close());
 
-  it('GET /api/health', async () => {
-    const res = await app.inject({ method: 'GET', url: '/api/health' });
-    assert.equal(res.statusCode, 200);
-    assert.deepEqual(res.json(), { status: 'ok' });
+  it('uses the mocked prisma', async () => {
+    prismaMock.user.create.mockResolvedValue({
+      id: 1,
+      login: 'Rich',
+      fullName: null,
+      email: null,
+      telegramId: null,
+      passwordHash: '',
+      passwordVersion: 0,
+      createdAt: new Date(),
+      updatedAt: new Date()
+    });
+
+    const res = await app.inject({
+      method: 'POST',
+      url: '/api/user/create',
+      payload: { login: 'Rich' },
+    });
+
+    expect(res.statusCode).toBe(201);
   });
 });

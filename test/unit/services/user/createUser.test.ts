@@ -1,27 +1,26 @@
 import { createUser } from '#/services/user/createUser.js';
-import { prisma } from '#/libs/__mocks__/prisma.js';
-import { vi, beforeEach, test, expect } from 'vitest';
-import { mockReset } from 'vitest-mock-extended';
+import type { PrismaClient } from '@prisma/client';
 
-vi.mock('#/libs/prisma.js');
+import { describe, expect, it } from 'vitest';
+import { mockDeep } from 'vitest-mock-extended';
 
-beforeEach(() => {
-  mockReset(prisma);
-});
+describe('createUser', () => {
+  const prismaMock = mockDeep<PrismaClient>();
 
-test('should create new user ', async () => {
-  prisma.user.create.mockResolvedValue({
-    id: 1,
-    login: 'Rich',
-    fullName: null,
-    email: null,
-    passwordHash: null,
-    passwordVersion: 0,
-    createdAt: new Date(),
-    updatedAt: new Date(),
-  } as any);
+  it('should create new user ', async () => {
+    prismaMock.user.create.mockResolvedValue({
+      id: 1,
+      login: 'Rich',
+      fullName: null,
+      email: null,
+      passwordHash: null,
+      passwordVersion: 0,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    } as any);
 
-  const user = await createUser({ login: 'Rich' });
-  expect(user.login).toBe('Rich');
-  expect(prisma.user.create).toHaveBeenCalledWith({ data: { login: 'Rich' } });
+    const user = await createUser(prismaMock, { login: 'Rich' });
+    expect(user.login).toBe('Rich');
+    expect(prismaMock.user.create).toHaveBeenCalledWith({ data: { login: 'Rich' } });
+  });
 });

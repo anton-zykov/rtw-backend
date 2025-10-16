@@ -1,5 +1,4 @@
-import { prisma } from '#/libs/prisma.js';
-import type { User } from '@prisma/client';
+import type { PrismaClient, User } from '@prisma/client';
 
 export type CreateUserInput = {
   login: string;
@@ -8,7 +7,7 @@ export type CreateUserInput = {
   telegramId?: string;
 };
 
-export async function createUser (input: CreateUserInput): Promise<User> {
+export async function createUser (prisma: PrismaClient, input: CreateUserInput): Promise<User> {
   const user = await prisma.user.create({
     data: input,
   });
