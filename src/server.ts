@@ -42,7 +42,7 @@ export function buildServer (deps: BuildDeps): FastifyZodInstance {
   app.register(deps.prismaPlugin, { prismaClient: deps.config.prisma.prismaClient });
   app.register(deps.telegramPlugin, { token: deps.config.telegram.token });
   app.register(healthRoutes, { prefix: '/api' });
-  app.register(userRoutes, { prefix: '/api' });
+  app.register(userRoutes, { prefix: '/api/user' });
 
   return app;
 }
