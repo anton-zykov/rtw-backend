@@ -16,6 +16,7 @@ import {
 import { healthRoutes } from '#/routes/health.js';
 import { userRoutes } from '#/routes/user.js';
 import { adminRoutes } from '#/routes/admin.js';
+import { studentRoutes } from './routes/student.js';
 
 export type FastifyZodInstance = FastifyInstance<
   RawServerDefault,
@@ -45,6 +46,7 @@ export function buildServer (deps: BuildDeps): FastifyZodInstance {
   app.register(healthRoutes, { prefix: '/api' });
   app.register(userRoutes, { prefix: '/api/user' });
   app.register(adminRoutes, { prefix: '/api/admin' });
+  app.register(studentRoutes, { prefix: '/api/student' });
 
   return app;
 }
