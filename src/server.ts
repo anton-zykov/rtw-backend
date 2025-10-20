@@ -15,6 +15,7 @@ import {
 } from 'fastify-type-provider-zod';
 import { healthRoutes } from '#/routes/health.js';
 import { userRoutes } from '#/routes/user.js';
+import { adminRoutes } from '#/routes/admin.js';
 
 export type FastifyZodInstance = FastifyInstance<
   RawServerDefault,
@@ -43,6 +44,7 @@ export function buildServer (deps: BuildDeps): FastifyZodInstance {
   app.register(deps.telegramPlugin, { token: deps.config.telegram.token });
   app.register(healthRoutes, { prefix: '/api' });
   app.register(userRoutes, { prefix: '/api/user' });
+  app.register(adminRoutes, { prefix: '/api/admin' });
 
   return app;
 }
