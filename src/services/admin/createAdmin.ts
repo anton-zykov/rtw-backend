@@ -1,3 +1,4 @@
+import { CustomError } from '#/utils/CustomError.js';
 import type { PrismaClient, Admin } from '@prisma/client';
 
 export type CreateAdminInput = {
@@ -10,14 +11,14 @@ export async function createAdmin (prisma: PrismaClient, input: CreateAdminInput
       id: input.id,
     },
   });
-  if (!user) throw new Error('User not found');
+  if (!user) throw new CustomError('User not found', 404);
 
   const existingStudent = await prisma.student.findUnique({
     where: {
       id: input.id,
     },
   });
-  if (existingStudent) throw new Error('User is already a student');
+  if (existingStudent) throw new CustomError('Student cannot be admin', 400);
 
   const admin = await prisma.admin.create({
     data: input,

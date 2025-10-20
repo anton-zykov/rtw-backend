@@ -1,5 +1,6 @@
 import { z } from 'zod';
 import { createAdmin } from '#/services/admin/createAdmin.js';
+import { CustomError } from '#/utils/CustomError.js';
 import type { FastifyZodInstance } from '#/server.js';
 
 const CreateAdminBody = z.object({
@@ -17,6 +18,7 @@ export async function adminRoutes (app: FastifyZodInstance) {
       response: {
         201: CreateAdminReply,
         400: z.object({ message: z.string() }),
+        404: z.object({ message: z.string() }),
       },
     },
   }, async (req, reply) => {
@@ -24,8 +26,9 @@ export async function adminRoutes (app: FastifyZodInstance) {
       const admin = await createAdmin(app.prisma, req.body);
       reply.status(201).send(admin);
     } catch (error) {
-      if (error instanceof Error) {
-        reply.status(400).send({ message: error.message });
+      if (error instanceof CustomError) {
+        reply.status((error.status === 400 || error.status === 404) ? error.status : 400)
+          .send({ message: error.message });
       } else throw error;
     }
   });
