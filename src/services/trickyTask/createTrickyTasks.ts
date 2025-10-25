@@ -1,7 +1,6 @@
-import { prisma } from '#/libs/prisma.js';
-import type { TrickyTask } from '@prisma/client';
+import { PrismaClient, type TrickyTask } from '@prisma/client';
 
-export type CreateTrickyTaskInput = {
+export type CreateTrickyTasksInput = {
   age: number,
   options: {
     word: string,
@@ -9,22 +8,15 @@ export type CreateTrickyTaskInput = {
   }[]
 }[];
 
-export async function createTrickyTasks (input: CreateTrickyTaskInput): Promise<TrickyTask[]> {
-  // TODO: think if validation is needed
+export async function createTrickyTasks (
+  prisma: PrismaClient,
+  input: CreateTrickyTasksInput
+): Promise<TrickyTask[]> {
   const tasks = await prisma.trickyTask.createManyAndReturn({
     data: input.map((item) => {
       return {
         age: item.age,
-        options: {
-          createMany: {
-            data: item.options.map((option) => {
-              return {
-                word: option.word,
-                correct: option.correct
-              };
-            })
-          }
-        }
+        options: item.options
       };
     })
   });
