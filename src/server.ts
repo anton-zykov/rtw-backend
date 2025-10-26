@@ -52,9 +52,9 @@ export function buildServer (deps: BuildDeps): FastifyZodInstance {
   app.register(deps.telegramPlugin, { token: deps.config.telegram.token });
 
   app.register(adminRoutes, { prefix: '/api/admin' });
-  app.register(genitiveTaskExerciseRoutes, { prefix: '/api/genitive/exercise' });
-  app.register(genitiveTaskPoolRoutes, { prefix: '/api/genitive/pool' });
-  app.register(genitiveTaskStudentRoutes, { prefix: '/api/genitive/student' });
+  app.register(genitiveTaskExerciseRoutes, { prefix: '/api/genitive-task/exercise' });
+  app.register(genitiveTaskPoolRoutes, { prefix: '/api/genitive-task/pool' });
+  app.register(genitiveTaskStudentRoutes, { prefix: '/api/genitive-task/student' });
   app.register(healthRoutes, { prefix: '/api' });
   app.register(studentRoutes, { prefix: '/api/student' });
   app.register(stressTaskRoutes, { prefix: '/api/stress' });

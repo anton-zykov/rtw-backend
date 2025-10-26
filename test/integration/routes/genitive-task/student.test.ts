@@ -1,38 +1,17 @@
-import { buildServer, type FastifyZodInstance } from '#/server.js';
-import { prismaPlugin } from '#/plugins/prisma.js';
-import { telegramPlugin } from '#/plugins/__mocks__/telegram.js';
-import { Prisma, type PrismaClient } from '@prisma/client';
-
+import { Prisma } from '@prisma/client';
+import { buildServerWithMocks } from 'test/helpers/buildServerWithMocks.js';
+import { createPrismaMock } from 'test/helpers/createPrismaMock.js';
 import { afterAll, afterEach, beforeAll, describe, expect, it, vi } from 'vitest';
-import { mockDeep } from 'vitest-mock-extended';
 import { assignGenitiveTasksToStudent } from '#/services/genitiveTask/assignGenitiveTasksToStudent.js';
 
 vi.mock('#/services/genitiveTask/assignGenitiveTasksToStudent.js', () => ({
   assignGenitiveTasksToStudent: vi.fn(),
 }));
 
-describe('genitive task routes', () => {
-  let app: FastifyZodInstance;
-  const prismaMock = mockDeep<PrismaClient>();
-  Object.defineProperty(prismaMock, 'getter', { value: () => prismaMock });
-
-  beforeAll(async () => {
-    app = buildServer({
-      prismaPlugin,
-      telegramPlugin,
-      config: {
-        logger: false,
-        telegram: {
-          token: undefined
-        },
-        prisma: {
-          prismaClient: prismaMock
-        }
-      }
-    });
-    await app.ready();
-  });
-
+describe('genitive-task/student', () => {
+  const prismaMock = createPrismaMock();
+  const app = buildServerWithMocks(prismaMock);
+  beforeAll(async () => await app.ready());
   afterAll(async () => await app.close());
 
   describe('genitive task assign', () => {
@@ -51,7 +30,7 @@ describe('genitive task routes', () => {
 
       const res = await app.inject({
         method: 'POST',
-        url: '/api/genitive/student/assign',
+        url: '/api/genitive-task/student/assign',
         payload: input,
       });
 
@@ -80,7 +59,7 @@ describe('genitive task routes', () => {
 
       const res = await app.inject({
         method: 'POST',
-        url: '/api/genitive/student/assign',
+        url: '/api/genitive-task/student/assign',
         payload: input,
       });
 
