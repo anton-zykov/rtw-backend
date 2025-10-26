@@ -1,10 +1,15 @@
 import { buildServer, type FastifyZodInstance } from '#/server.js';
 import { prismaPlugin } from '#/plugins/prisma.js';
 import { telegramPlugin } from '#/plugins/__mocks__/telegram.js';
-import { Prisma, type PrismaClient, type StudentGenitiveTask } from '@prisma/client';
+import { Prisma, type PrismaClient } from '@prisma/client';
 
-import { afterAll, afterEach, beforeAll, describe, expect, it } from 'vitest';
+import { afterAll, afterEach, beforeAll, describe, expect, it, vi } from 'vitest';
 import { mockDeep } from 'vitest-mock-extended';
+import { assignGenitiveTasksToStudent } from '#/services/genitiveTask/assignGenitiveTasksToStudent.js';
+
+vi.mock('#/services/genitiveTask/assignGenitiveTasksToStudent.js', () => ({
+  assignGenitiveTasksToStudent: vi.fn(),
+}));
 
 describe('genitive task routes', () => {
   let app: FastifyZodInstance;
@@ -39,14 +44,10 @@ describe('genitive task routes', () => {
         genitiveTaskIds: ['task1', 'task2', 'task3'],
       };
 
-      prismaMock.studentGenitiveTask.findMany.mockResolvedValue([
-        { taskId: 'task1' },
-        { taskId: 'task2' },
-      ] as unknown as StudentGenitiveTask[]);
-
-      prismaMock.studentGenitiveTask.createManyAndReturn.mockResolvedValue([
-        { taskId: 'task3' }
-      ] as unknown as StudentGenitiveTask[]);
+      vi.mocked(assignGenitiveTasksToStudent).mockResolvedValue({
+        created: ['task3'],
+        skipped: 2
+      });
 
       const res = await app.inject({
         method: 'POST',
@@ -61,15 +62,13 @@ describe('genitive task routes', () => {
       });
     });
 
-    it('should reoly 404 if student or tasts not found', async () => {
+    it('should reply 404 if student or tasts not found', async () => {
       const input = {
         studentId: 1,
         genitiveTaskIds: ['task1', 'task2', 'task3'],
       };
 
-      prismaMock.studentGenitiveTask.findMany.mockResolvedValue([]);
-
-      prismaMock.studentGenitiveTask.createManyAndReturn.mockRejectedValue(
+      vi.mocked(assignGenitiveTasksToStudent).mockRejectedValue(
         new Prisma.PrismaClientKnownRequestError(
           '',
           {
