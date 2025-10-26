@@ -13,11 +13,17 @@ import {
   validatorCompiler,
   serializerCompiler,
 } from 'fastify-type-provider-zod';
-import { healthRoutes } from '#/routes/health.js';
-import { userRoutes } from '#/routes/user.js';
-import { adminRoutes } from '#/routes/admin.js';
-import { studentRoutes } from '#/routes/student.js';
-import { genitiveTaskRoutes } from '#/routes/genitiveTask.js';
+import {
+  adminRoutes,
+  genitiveTaskExerciseRoutes,
+  genitiveTaskPoolRoutes,
+  genitiveTaskStudentRoutes,
+  healthRoutes,
+  stressTaskRoutes,
+  studentRoutes,
+  trickyTaskRoutes,
+  userRoutes
+} from '#/routes/index.js';
 
 export type FastifyZodInstance = FastifyInstance<
   RawServerDefault,
@@ -44,11 +50,16 @@ export function buildServer (deps: BuildDeps): FastifyZodInstance {
   app.setSerializerCompiler(serializerCompiler);
   app.register(deps.prismaPlugin, { prismaClient: deps.config.prisma.prismaClient });
   app.register(deps.telegramPlugin, { token: deps.config.telegram.token });
-  app.register(healthRoutes, { prefix: '/api' });
-  app.register(userRoutes, { prefix: '/api/user' });
+
   app.register(adminRoutes, { prefix: '/api/admin' });
+  app.register(genitiveTaskExerciseRoutes, { prefix: '/api/genitive/exercise' });
+  app.register(genitiveTaskPoolRoutes, { prefix: '/api/genitive/pool' });
+  app.register(genitiveTaskStudentRoutes, { prefix: '/api/genitive/student' });
+  app.register(healthRoutes, { prefix: '/api' });
   app.register(studentRoutes, { prefix: '/api/student' });
-  app.register(genitiveTaskRoutes, { prefix: '/api/genitive' });
+  app.register(stressTaskRoutes, { prefix: '/api/stress' });
+  app.register(trickyTaskRoutes, { prefix: '/api/tricky' });
+  app.register(userRoutes, { prefix: '/api/user' });
 
   return app;
 }

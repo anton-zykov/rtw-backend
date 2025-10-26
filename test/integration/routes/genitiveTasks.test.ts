@@ -51,7 +51,7 @@ describe('genitive task routes', () => {
 
       const res = await app.inject({
         method: 'POST',
-        url: '/api/genitive/assign-to-student',
+        url: '/api/genitive/student/assign',
         payload: input,
       });
 
@@ -80,7 +80,7 @@ describe('genitive task routes', () => {
 
       const res = await app.inject({
         method: 'POST',
-        url: '/api/genitive/assign-to-student',
+        url: '/api/genitive/student/assign',
         payload: input,
       });
 
