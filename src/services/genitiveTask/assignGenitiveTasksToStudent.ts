@@ -24,26 +24,18 @@ export async function assignGenitiveTasksToStudent (
   const existingIds = new Set(existing.map(e => e.taskId));
   const idsToCreate = input.genitiveTaskIds.filter(id => !existingIds.has(id));
 
-  await prisma.student.update({
-    where: {
-      id: input.studentId
-    },
-    data: {
-      genitiveTasks: {
-        create: idsToCreate
-          .map(id => ({
-            task: {
-              connect: {
-                id
-              }
-            },
-          })),
-      },
+  const created = await prisma.studentGenitiveTask.createManyAndReturn({
+    data: idsToCreate.map(taskId => ({
+      studentId: input.studentId,
+      taskId
+    })),
+    select: {
+      taskId: true
     },
   });
 
   return {
-    created: idsToCreate,
+    created: created.map(r => r.taskId),
     skipped: existingIds.size
   };
 }
