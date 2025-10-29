@@ -5,19 +5,31 @@ import {
   genitiveTaskExerciseRoutes
 } from './genitive-task/index.js';
 import { healthRoutes } from './health.js';
-import { stressTaskRoutes } from './stressTask.js';
+import {
+  stressTaskPoolRoutes,
+  stressTaskStudentRoutes,
+  stressTaskExerciseRoutes
+} from './stress-task/index.js';
 import { studentRoutes } from './student.js';
-import { trickyTaskRoutes } from './trickyTask.js';
+import {
+  trickyTaskPoolRoutes,
+  trickyTaskStudentRoutes,
+  trickyTaskExerciseRoutes
+} from './tricky-task/index.js';
 import { userRoutes } from './user.js';
 
 export {
   adminRoutes,
+  genitiveTaskExerciseRoutes,
   genitiveTaskPoolRoutes,
   genitiveTaskStudentRoutes,
-  genitiveTaskExerciseRoutes,
   healthRoutes,
-  stressTaskRoutes,
+  stressTaskExerciseRoutes,
+  stressTaskPoolRoutes,
+  stressTaskStudentRoutes,
   studentRoutes,
-  trickyTaskRoutes,
+  trickyTaskExerciseRoutes,
+  trickyTaskPoolRoutes,
+  trickyTaskStudentRoutes,
   userRoutes
 };

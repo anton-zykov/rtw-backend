@@ -42,6 +42,6 @@ export async function genitiveTaskPoolRoutes (app: FastifyZodInstance) {
       }
     }
   }, async (_req, _reply) => {
-    // TODO
+    // TODO /genitive/pool/delete
   });
 }

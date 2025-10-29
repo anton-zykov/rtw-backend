@@ -39,4 +39,19 @@ export async function genitiveTaskStudentRoutes (app: FastifyZodInstance) {
       reply.status(500);
     }
   });
+
+  app.delete('/remove', {
+    schema: {
+      body: z.object({
+        studentId: z.number(),
+        genitiveTaskIds: z.array(z.uuid()),
+      }),
+      response: {
+        200: z.null(),
+        404: z.object({ message: z.string() }),
+      },
+    },
+  }, async (_req, _reply) => {
+    // TODO /genitive/student/remove
+  });
 }

@@ -1,10 +1,9 @@
 import { z } from 'zod';
-import { createTrickyTasks } from '#/services/trickyTask/createTrickyTasks.js';
+import { createStressTasks } from '#/services/stressTask/createStressTasks.js';
 import type { FastifyZodInstance } from '#/server.js';
 
-const CreateTrickyTasksBody = z.array(
+const CreateStressTasksBody = z.array(
   z.object({
-    age: z.number().int().positive(),
     options: z.array(
       z.object({
         word: z.string(),
@@ -16,23 +15,23 @@ const CreateTrickyTasksBody = z.array(
   }).strict()
 );
 
-const CreateTrickyTasksReply = z.array(
+const CreateStressTasksReply = z.array(
   z.object({
     id: z.uuid(),
   })
 );
 
-export async function trickyTaskRoutes (app: FastifyZodInstance) {
+export async function stressTaskPoolRoutes (app: FastifyZodInstance) {
   app.post('/create', {
     schema: {
-      body: CreateTrickyTasksBody,
+      body: CreateStressTasksBody,
       response: {
-        201: CreateTrickyTasksReply,
+        201: CreateStressTasksReply,
         400: z.object({ message: z.string() }),
       },
     },
   }, async (req, reply) => {
-    const tasks = await createTrickyTasks(app.prisma, req.body);
+    const tasks = await createStressTasks(app.prisma, req.body);
     reply.status(201).send(tasks);
   });
 }
