@@ -25,7 +25,8 @@
     "typecheck": "tsc --noEmit",
     "build": "tsc -p tsconfig.build.json && tsc-alias -p tsconfig.json",
     "start": "node dist/src/index.js",
-    "test": "vitest"
+    "test": "vitest",
+    "db:seed": "docker compose exec -T db psql -U postgres -d rtw_dev < db/seed.sql"
   },
   "dependencies": {
     "@prisma/client": "^6.16.3",
