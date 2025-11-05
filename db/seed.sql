@@ -22,27 +22,27 @@ INSERT INTO "Admin" (id) VALUES (1);
 INSERT INTO "Student" (id) VALUES (2);
 
 INSERT INTO "GenitiveTask" (id, nominative, options) VALUES
-  ('a', 'инженер', '[{"word": "инженеры", "correct": true}, {"word": "инженера", "correct": false}]'),
-  ('b', 'компьютер', '[{"word": "компьютеры", "correct": true}, {"word": "компьютера", "correct": false}]'),
-  ('c', 'крем', '[{"word": "кремы", "correct": true}, {"word": "крема", "correct": false}]'),
-  ('d', 'возраст', '[{"word": "возрасты", "correct": true}, {"word": "возраста", "correct": false}]'),
-  ('e', 'повар', '[{"word": "повара", "correct": true}, {"word": "повары", "correct": false}]'),
-  ('f', 'мастер', '[{"word": "мастера", "correct": true}, {"word": "мастеры", "correct": false}]'),
-  ('g', 'оладья', '[{"word": "оладий", "correct": true}, {"word": "оладьев", "correct": false}]'),
-  ('h', 'сандалия', '[{"word": "сандалий", "correct": true}, {"word": "сандалиев", "correct": false}]'),
-  ('i', 'судья', '[{"word": "судей", "correct": true}, {"word": "судьей", "correct": false}]'),
-  ('j', 'копье', '[{"word": "копий", "correct": true}, {"word": "копьев", "correct": false}]');
+  ('051b6988-1bec-4697-8e61-f73e34fb4148', 'инженер', '[{"word": "инженеры", "correct": true}, {"word": "инженера", "correct": false}]'),
+  ('1cfcea9e-99d8-464f-8437-073ee530052b', 'компьютер', '[{"word": "компьютеры", "correct": true}, {"word": "компьютера", "correct": false}]'),
+  ('0faa7203-8742-4bcb-9d32-fb3d88083c44', 'крем', '[{"word": "кремы", "correct": true}, {"word": "крема", "correct": false}]'),
+  ('f722f86e-14f8-4ef9-9e50-83de454c1551', 'возраст', '[{"word": "возрасты", "correct": true}, {"word": "возраста", "correct": false}]'),
+  ('e24ca05f-7d4e-418b-9049-bb94b62d78e5', 'повар', '[{"word": "повара", "correct": true}, {"word": "повары", "correct": false}]'),
+  ('5de3756a-028d-40dc-91eb-74397440e741', 'мастер', '[{"word": "мастера", "correct": true}, {"word": "мастеры", "correct": false}]'),
+  ('5ed89502-59d8-44af-a4f8-d36b8754e703', 'оладья', '[{"word": "оладий", "correct": true}, {"word": "оладьев", "correct": false}]'),
+  ('66c77285-3c27-46a4-a3f9-65f72ec51096', 'сандалия', '[{"word": "сандалий", "correct": true}, {"word": "сандалиев", "correct": false}]'),
+  ('499549f1-8013-4a4b-8557-12a8c4488f62', 'судья', '[{"word": "судей", "correct": true}, {"word": "судьей", "correct": false}]'),
+  ('55634785-bed4-4150-89b0-a60879f5e1d4', 'копье', '[{"word": "копий", "correct": true}, {"word": "копьев", "correct": false}]');
 
-INSERT INTO "StudentGenitiveTask" ("studentId", "taskId") VALUES
-  (2, 'a'),
-  (2, 'b'),
-  (2, 'c'),
-  (2, 'd'),
-  (2, 'e'),
-  (2, 'f'),
-  (2, 'g'),
-  (2, 'h'),
-  (2, 'i'),
-  (2, 'j');
+INSERT INTO "StudentGenitiveTask" ("studentId", "taskId", "weight") VALUES
+  (2, '051b6988-1bec-4697-8e61-f73e34fb4148', 10),
+  (2, '1cfcea9e-99d8-464f-8437-073ee530052b', 10),
+  (2, '0faa7203-8742-4bcb-9d32-fb3d88083c44', 5),
+  (2, 'f722f86e-14f8-4ef9-9e50-83de454c1551', 5),
+  (2, 'e24ca05f-7d4e-418b-9049-bb94b62d78e5', 5),
+  (2, '5de3756a-028d-40dc-91eb-74397440e741', 5),
+  (2, '5ed89502-59d8-44af-a4f8-d36b8754e703', 5),
+  (2, '66c77285-3c27-46a4-a3f9-65f72ec51096', 5),
+  (2, '499549f1-8013-4a4b-8557-12a8c4488f62', 1),
+  (2, '55634785-bed4-4150-89b0-a60879f5e1d4', 1);
 
 COMMIT;
