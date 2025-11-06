@@ -1,4 +1,4 @@
-import { assignGenitiveTasksToStudent } from '#/services/genitiveTask/assignGenitiveTasksToStudent.js';
+import { assignGenitiveTasksToStudent } from '#/services/genitiveTask/assignToStudent.js';
 import type { PrismaClient, StudentGenitiveTask } from '@prisma/client';
 
 import { describe, expect, it } from 'vitest';

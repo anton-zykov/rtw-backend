@@ -1,14 +1,15 @@
 import { PrismaClient } from '@prisma/client';
 
-export type AssignGenitiveTasksToStudentInput = {
-  studentId: number;
-  genitiveTaskIds: string[];
-};
-
-export async function assignGenitiveTasksToStudent (
+export async function assignToStudent (
   prisma: PrismaClient,
-  input: AssignGenitiveTasksToStudentInput
-): Promise<{ created: string[]; skipped: number }> {
+  input: {
+    studentId: number;
+    genitiveTaskIds: string[];
+  }
+): Promise<{
+  created: string[];
+  skipped: number;
+}> {
   const existing = await prisma.studentGenitiveTask.findMany({
     where: {
       studentId: input.studentId,

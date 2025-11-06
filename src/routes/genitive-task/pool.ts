@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { createGenitiveTasks } from '#/services/genitiveTask/createGenitiveTasks.js';
+import { createTasks } from '#/services/genitiveTask/index.js';
 import type { FastifyZodInstance } from '#/server.js';
 
 const CreateGenitiveTasksBody = z.array(
@@ -30,7 +30,7 @@ export async function genitiveTaskPoolRoutes (app: FastifyZodInstance) {
       },
     },
   }, async (req, reply) => {
-    const tasks = await createGenitiveTasks(app.prisma, req.body);
+    const tasks = await createTasks(app.prisma, req.body);
     reply.status(201).send(tasks);
   });
 

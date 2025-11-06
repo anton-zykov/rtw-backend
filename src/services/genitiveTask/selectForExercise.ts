@@ -9,7 +9,7 @@ type StudentGenitiveTaskWithTaskDetails =
   Pick<StudentGenitiveTask, 'taskId' | 'weight'> &
   Pick<GenitiveTask, 'nominative' | 'options'>;
 
-export async function selectGenitiveTasksForExercise (
+export async function selectForExercise (
   prisma: PrismaClient,
   input: SelectGenitiveTasksForExerciseInput
 ): Promise<StudentGenitiveTaskWithTaskDetails[]> {

@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { selectGenitiveTasksForExercise } from '#/services/genitiveTask/selectGenitiveTasksForExercise.js';
+import { checkAnswers, selectForExercise } from '#/services/genitiveTask/index.js';
 import type { FastifyZodInstance } from '#/server.js';
 
 const GetGenitiveExerciseBody = z.object({
@@ -23,6 +23,23 @@ const GetGenitiveExerciseReply = z.array(
   })
 );
 
+const CheckGenitiveExerciseBody = z.object({
+  studentId: z.number(),
+  exercise: z.array(
+    z.object({
+      taskId: z.uuid(),
+      answer: z.string(),
+    })
+  ),
+}).strict();
+
+const CheckGenitiveExerciseReply = z.array(
+  z.object({
+    taskId: z.uuid(),
+    correct: z.boolean(),
+  })
+);
+
 export async function genitiveTaskExerciseRoutes (app: FastifyZodInstance) {
   app.post('/get', {
     schema: {
@@ -32,7 +49,20 @@ export async function genitiveTaskExerciseRoutes (app: FastifyZodInstance) {
       },
     },
   }, async (req, reply) => {
-    const tasks = await selectGenitiveTasksForExercise(app.prisma, req.body);
+    const tasks = await selectForExercise(app.prisma, req.body);
+    reply.status(200).send(tasks);
+  });
+
+  app.post('/check', {
+    schema: {
+      body: CheckGenitiveExerciseBody,
+      response: {
+        200: CheckGenitiveExerciseReply,
+        400: z.object({ message: z.string() }),
+      }
+    }
+  }, async (req, reply) => {
+    const tasks = await checkAnswers(app.prisma, req.body);
     reply.status(200).send(tasks);
   });
 }

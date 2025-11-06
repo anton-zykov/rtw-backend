@@ -2,7 +2,7 @@ import { Prisma } from '@prisma/client';
 import { buildServerWithMocks } from 'test/helpers/buildServerWithMocks.js';
 import { createPrismaMock } from 'test/helpers/createPrismaMock.js';
 import { afterAll, afterEach, beforeAll, describe, expect, it, vi } from 'vitest';
-import { assignGenitiveTasksToStudent } from '#/services/genitiveTask/assignGenitiveTasksToStudent.js';
+import { assignGenitiveTasksToStudent } from '#/services/genitiveTask/assignToStudent.js';
 
 vi.mock('#/services/genitiveTask/assignGenitiveTasksToStudent.js', () => ({
   assignGenitiveTasksToStudent: vi.fn(),

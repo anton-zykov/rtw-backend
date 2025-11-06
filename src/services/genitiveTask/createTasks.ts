@@ -8,7 +8,7 @@ export type CreateGenitiveTasksInput = {
   }[];
 }[];
 
-export async function createGenitiveTasks (
+export async function createTasks (
   prisma: PrismaClient,
   input: CreateGenitiveTasksInput
 ): Promise<GenitiveTask[]> {

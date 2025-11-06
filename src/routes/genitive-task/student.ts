@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import { Prisma } from '@prisma/client';
-import { assignGenitiveTasksToStudent } from '#/services/genitiveTask/assignGenitiveTasksToStudent.js';
+import { assignToStudent } from '#/services/genitiveTask/index.js';
 import type { FastifyZodInstance } from '#/server.js';
 
 const AssignToStudentBody = z.object({
@@ -25,7 +25,7 @@ export async function genitiveTaskStudentRoutes (app: FastifyZodInstance) {
     },
   }, async (req, reply) => {
     try {
-      const { created, skipped } = await assignGenitiveTasksToStudent(app.prisma, req.body);
+      const { created, skipped } = await assignToStudent(app.prisma, req.body);
       reply.status(200).send({ created, skipped });
     } catch (error) {
       if (error instanceof Prisma.PrismaClientKnownRequestError) {
