@@ -1,11 +1,12 @@
 import { CustomError } from '#/utils/CustomError.js';
 import type { PrismaClient, Admin } from '@prisma/client';
 
-export type CreateAdminInput = {
-  id: number;
-};
-
-export async function createAdmin (prisma: PrismaClient, input: CreateAdminInput): Promise<Admin> {
+export async function createAdmin (
+  prisma: PrismaClient,
+  input: {
+    id: number;
+  }
+): Promise<Admin> {
   const user = await prisma.user.findUnique({
     where: {
       id: input.id,

@@ -1,11 +1,12 @@
 import { CustomError } from '#/utils/CustomError.js';
 import type { PrismaClient, Student } from '@prisma/client';
 
-export type CreateStudentInput = {
-  id: number;
-};
-
-export async function createStudent (prisma: PrismaClient, input: CreateStudentInput): Promise<Student> {
+export async function createStudent (
+  prisma: PrismaClient,
+  input: {
+    id: number;
+  }
+): Promise<Student> {
   const user = await prisma.user.findUnique({
     where: {
       id: input.id,
