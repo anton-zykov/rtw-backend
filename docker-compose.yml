@@ -11,8 +11,17 @@ services:
       - "${PG_PORT}:5432"
     volumes:
       - db_data:/var/lib/postgresql/data
-      # Optionally mount an init script:
-      # - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+  cache:
+    image: redis:8.2
+    container_name: redis_cache
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "redis-cli ping | grep PONG"]
+      interval: 1s
+      timeout: 3s
+      retries: 5
+    ports:
+      - "${REDIS_PORT}:6379"
 
 volumes:
   db_data:
