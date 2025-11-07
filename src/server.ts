@@ -6,8 +6,9 @@ import fastify, {
   type RawRequestDefaultExpression,
   type RawServerDefault,
 } from 'fastify';
-import type { TelegramPluginOptions } from '#/plugins/telegram.js';
 import type { PrismaPluginOptions } from '#/plugins/prisma.js';
+import type { RedisPluginOptions } from '#/plugins/redis.js';
+import type { TelegramPluginOptions } from '#/plugins/telegram.js';
 import {
   type ZodTypeProvider,
   validatorCompiler,
@@ -39,11 +40,13 @@ export type FastifyZodInstance = FastifyInstance<
 
 type BuildDeps = {
   prismaPlugin: FastifyPluginAsync<PrismaPluginOptions>;
+  redisPlugin: FastifyPluginAsync<RedisPluginOptions>;
   telegramPlugin: FastifyPluginAsync<TelegramPluginOptions>;
   config: {
     logger: boolean;
-    telegram: TelegramPluginOptions;
     prisma: PrismaPluginOptions;
+    redis: RedisPluginOptions;
+    telegram: TelegramPluginOptions;
   };
 };
 
@@ -53,6 +56,7 @@ export function buildServer (deps: BuildDeps): FastifyZodInstance {
   app.setValidatorCompiler(validatorCompiler);
   app.setSerializerCompiler(serializerCompiler);
   app.register(deps.prismaPlugin, { prismaClient: deps.config.prisma.prismaClient });
+  app.register(deps.redisPlugin, { redisClient: deps.config.redis.redisClient });
   app.register(deps.telegramPlugin, { token: deps.config.telegram.token });
 
   app.register(adminRoutes, { prefix: '/api/admin' });
