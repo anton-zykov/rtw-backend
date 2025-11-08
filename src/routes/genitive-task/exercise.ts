@@ -49,7 +49,7 @@ export async function genitiveTaskExerciseRoutes (app: FastifyZodInstance) {
       },
     },
   }, async (req, reply) => {
-    const tasks = await selectForExercise(app.prisma, req.body);
+    const tasks = await selectForExercise(app.prisma, app.redis, req.body);
     reply.status(200).send(tasks);
   });
 
