@@ -1,4 +1,5 @@
 import { adminRoutes } from './admin.js';
+import { authRoutes } from './auth.js';
 import {
   genitiveTaskPoolRoutes,
   genitiveTaskStudentRoutes,
@@ -20,6 +21,7 @@ import { userRoutes } from './user.js';
 
 export {
   adminRoutes,
+  authRoutes,
   genitiveTaskExerciseRoutes,
   genitiveTaskPoolRoutes,
   genitiveTaskStudentRoutes,

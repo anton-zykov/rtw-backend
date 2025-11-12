@@ -6,9 +6,12 @@ import fastify, {
   type RawRequestDefaultExpression,
   type RawServerDefault,
 } from 'fastify';
+import { fastifyCookie } from '@fastify/cookie';
 import type { PrismaPluginOptions } from '#/plugins/prisma.js';
 import type { RedisPluginOptions } from '#/plugins/redis.js';
 import type { TelegramPluginOptions } from '#/plugins/telegram.js';
+import { sessionPlugin } from '#/plugins/session.js';
+import { authGuardPlugin } from '#/plugins/auth-guards.js';
 import {
   type ZodTypeProvider,
   validatorCompiler,
@@ -16,6 +19,7 @@ import {
 } from 'fastify-type-provider-zod';
 import {
   adminRoutes,
+  authRoutes,
   genitiveTaskExerciseRoutes,
   genitiveTaskPoolRoutes,
   genitiveTaskStudentRoutes,
@@ -55,11 +59,15 @@ export function buildServer (deps: BuildDeps): FastifyZodInstance {
 
   app.setValidatorCompiler(validatorCompiler);
   app.setSerializerCompiler(serializerCompiler);
+  app.register(fastifyCookie);
   app.register(deps.prismaPlugin, { prismaClient: deps.config.prisma.prismaClient });
   app.register(deps.redisPlugin, { redisClient: deps.config.redis.redisClient });
   app.register(deps.telegramPlugin, { token: deps.config.telegram.token });
+  app.register(sessionPlugin);
+  app.register(authGuardPlugin);
 
   app.register(adminRoutes, { prefix: '/api/admin' });
+  app.register(authRoutes, { prefix: '/api/auth' });
   app.register(genitiveTaskExerciseRoutes, { prefix: '/api/genitive-task/exercise' });
   app.register(genitiveTaskPoolRoutes, { prefix: '/api/genitive-task/pool' });
   app.register(genitiveTaskStudentRoutes, { prefix: '/api/genitive-task/student' });
