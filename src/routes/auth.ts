@@ -1,6 +1,6 @@
 import { PrismaClient } from '@prisma/client';
 import { z } from 'zod';
-// import bcrypt from 'bcrypt';
+import bcrypt from 'bcrypt';
 import type { FastifyZodInstance } from '#/server.js';
 
 const prisma = new PrismaClient();
@@ -23,7 +23,7 @@ export async function authRoutes (app: FastifyZodInstance) {
       return reply.code(401).send({ message: 'Invalid credentials' });
     }
 
-    const ok = password === user.passwordHash; // await bcrypt.compare(password, user.passwordHash);
+    const ok = await bcrypt.compare(password, user.passwordHash);
     if (!ok) {
       return reply.code(401).send({ message: 'Invalid credentials' });
     }

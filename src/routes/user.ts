@@ -5,6 +5,7 @@ import { updateUser } from '#/services/user/updateUser.js';
 
 const CreateUserBody = z.object({
   login: z.string().min(3, 'login must be at least 3 characters long'),
+  password: z.string().min(8, 'password must be at least 8 characters long'),
   fullName: z.string().optional(),
   email: z.email().optional(),
   telegramId: z.string().regex(/^@/).optional(),
