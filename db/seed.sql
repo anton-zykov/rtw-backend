@@ -13,9 +13,9 @@ TRUNCATE TABLE
   "StudentTrickyTask"
 RESTART IDENTITY CASCADE;
 
-INSERT INTO "User" (id, login) VALUES
-  (1, 'Alice'),
-  (2, 'Bob');
+INSERT INTO "User" (id, login, "passwordHash") VALUES
+  (1, 'Alice', '$2a$10$LzcYoDDAutsZ.mlE5IPh7uzHQS4zHjJojormjB66dpbBABhCaBcR2'),
+  (2, 'Bob', '$2a$10$LzcYoDDAutsZ.mlE5IPh7uzHQS4zHjJojormjB66dpbBABhCaBcR2');
 
 INSERT INTO "Admin" (id) VALUES (1);
 
