@@ -6,6 +6,7 @@ import type { Session } from 'fastify';
 declare module 'fastify' {
   interface Session {
     userId: number;
+    role: 'admin' | 'student' | 'not-set';
   }
 }
 

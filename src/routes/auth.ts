@@ -1,5 +1,7 @@
 import { z } from 'zod';
 import bcrypt from 'bcrypt';
+import { findAdminById } from '#/services/admin/findAdminById.js';
+import { findStudentById } from '#/services/student/findStudentById.js';
 import { findUserById } from '#/services/auth/findUserById.js';
 import { findUserByLogin } from '#/services/auth/findUserByLogin.js';
 import type { FastifyZodInstance } from '#/server.js';
@@ -42,6 +44,10 @@ export async function authRoutes (app: FastifyZodInstance) {
     }
 
     req.session.userId = user.id;
+
+    if (await findStudentById(app.prisma, { id: user.id }) !== null) req.session.role = 'student';
+    else if (await findAdminById(app.prisma, { id: user.id }) !== null) req.session.role = 'admin';
+    else req.session.role = 'not-set';
 
     return reply.status(200).send();
   });
