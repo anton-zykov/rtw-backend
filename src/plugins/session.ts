@@ -33,17 +33,22 @@ class RedisStore implements SessionStore {
       const session = JSON.parse(data);
       callback(null, session);
     } catch (err) {
-      callback(err as Error);
+      callback(err);
     }
   }
 
   async set (sid: string, session: Session, callback: any) {
     try {
       const data = JSON.stringify(session);
-      await this.client.set(this.key(sid), data, { expiration: { type: 'PX', value: this.ttl() } });
+      await this.client.set(this.key(sid), data, {
+        expiration: {
+          type: 'PX',
+          value: this.ttl()
+        }
+      });
       callback(null);
-    } catch (err: any) {
-      callback(err as Error);
+    } catch (err) {
+      callback(err);
     }
   }
 
