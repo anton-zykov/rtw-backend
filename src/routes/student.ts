@@ -13,6 +13,7 @@ const CreateStudentReply = z.object({
 
 export async function studentRoutes (app: FastifyZodInstance) {
   app.post('/create', {
+    preHandler: app.requireAdmin,
     schema: {
       body: CreateStudentBody,
       response: {

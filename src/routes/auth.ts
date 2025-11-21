@@ -63,6 +63,7 @@ export async function authRoutes (app: FastifyZodInstance) {
   });
 
   app.get('/me', {
+    preHandler: app.requireSession,
     schema: {
       response: {
         200: MeReply,

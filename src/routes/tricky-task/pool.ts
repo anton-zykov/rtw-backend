@@ -24,6 +24,7 @@ const CreateTrickyTasksReply = z.array(
 
 export async function trickyTaskPoolRoutes (app: FastifyZodInstance) {
   app.post('/create', {
+    preHandler: app.requireAdmin,
     schema: {
       body: CreateTrickyTasksBody,
       response: {

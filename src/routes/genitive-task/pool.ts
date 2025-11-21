@@ -22,6 +22,7 @@ const CreateGenitiveTasksReply = z.array(
 
 export async function genitiveTaskPoolRoutes (app: FastifyZodInstance) {
   app.post('/create', {
+    preHandler: app.requireAdmin,
     schema: {
       body: CreateGenitiveTasksBody,
       response: {
@@ -35,6 +36,7 @@ export async function genitiveTaskPoolRoutes (app: FastifyZodInstance) {
   });
 
   app.delete('/delete', {
+    preHandler: app.requireAdmin,
     schema: {
       body: {},
       response: {

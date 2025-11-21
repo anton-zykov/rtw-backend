@@ -15,6 +15,7 @@ const AssignToStudentReply = z.object({
 
 export async function genitiveTaskStudentRoutes (app: FastifyZodInstance) {
   app.post('/assign', {
+    preHandler: app.requireAdmin,
     schema: {
       body: AssignToStudentBody,
       response: {
@@ -41,6 +42,7 @@ export async function genitiveTaskStudentRoutes (app: FastifyZodInstance) {
   });
 
   app.delete('/remove', {
+    preHandler: app.requireAdmin,
     schema: {
       body: z.object({
         studentId: z.number(),

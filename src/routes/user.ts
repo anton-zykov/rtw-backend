@@ -40,6 +40,7 @@ const UpdateUserReply = z.object({
 
 export async function userRoutes (app: FastifyZodInstance) {
   app.post('/create', {
+    preHandler: app.requireAdmin,
     schema: {
       body: CreateUserBody,
       response: {
@@ -52,6 +53,7 @@ export async function userRoutes (app: FastifyZodInstance) {
   });
 
   app.patch('/update', {
+    preHandler: app.requireAdmin, // TODO: allow student to update his own data
     schema: {
       body: UpdateUserBody,
       response: {

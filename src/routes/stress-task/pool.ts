@@ -23,6 +23,7 @@ const CreateStressTasksReply = z.array(
 
 export async function stressTaskPoolRoutes (app: FastifyZodInstance) {
   app.post('/create', {
+    preHandler: app.requireAdmin,
     schema: {
       body: CreateStressTasksBody,
       response: {

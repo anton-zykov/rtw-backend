@@ -13,6 +13,7 @@ const CreateAdminReply = z.object({
 
 export async function adminRoutes (app: FastifyZodInstance) {
   app.post('/create', {
+    preHandler: app.requireAdmin,
     schema: {
       body: CreateAdminBody,
       response: {
