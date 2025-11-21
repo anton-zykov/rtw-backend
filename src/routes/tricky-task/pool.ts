@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { createTrickyTasks } from '#/services/trickyTask/createTrickyTasks.js';
+import { createTrickyTasks } from '#/services/trickyTask/index.js';
 import type { FastifyZodInstance } from '#/server.js';
 
 const CreateTrickyTasksBody = z.array(

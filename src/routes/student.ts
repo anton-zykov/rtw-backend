@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { createStudent } from '#/services/student/createStudent.js';
+import { createStudent } from '#/services/student/index.js';
 import { CustomError } from '#/utils/CustomError.js';
 import type { FastifyZodInstance } from '#/server.js';
 

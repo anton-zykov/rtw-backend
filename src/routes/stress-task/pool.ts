@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { createStressTasks } from '#/services/stressTask/createStressTasks.js';
+import { createStressTasks } from '#/services/stressTask/index.js';
 import type { FastifyZodInstance } from '#/server.js';
 
 const CreateStressTasksBody = z.array(

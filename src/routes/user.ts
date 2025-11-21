@@ -1,7 +1,6 @@
 import { z } from 'zod';
-import { createUser } from '#/services/user/createUser.js';
+import { createUser, updateUser } from '#/services/user/index.js';
 import type { FastifyZodInstance } from '#/server.js';
-import { updateUser } from '#/services/user/updateUser.js';
 
 const CreateUserBody = z.object({
   login: z.string().min(3, 'login must be at least 3 characters long'),

@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { createAdmin } from '#/services/admin/createAdmin.js';
+import { createAdmin } from '#/services/admin/index.js';
 import { CustomError } from '#/utils/CustomError.js';
 import type { FastifyZodInstance } from '#/server.js';
 
