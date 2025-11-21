@@ -42,7 +42,7 @@ const CheckGenitiveExerciseReply = z.array(
 
 export async function genitiveTaskExerciseRoutes (app: FastifyZodInstance) {
   app.post('/get', {
-    preHandler: app.requireStudent, // TODO: allow student to get his own data
+    preHandler: app.requireOwnerStudent,
     schema: {
       body: GetGenitiveExerciseBody,
       response: {
@@ -51,11 +51,11 @@ export async function genitiveTaskExerciseRoutes (app: FastifyZodInstance) {
     },
   }, async (req, reply) => {
     const tasks = await selectForExercise(app.prisma, app.redis, req.body);
-    reply.status(200).send(tasks);
+    return reply.status(200).send(tasks);
   });
 
   app.post('/check', {
-    preHandler: app.requireStudent,
+    preHandler: app.requireOwnerStudent,
     schema: {
       body: CheckGenitiveExerciseBody,
       response: {
@@ -65,6 +65,6 @@ export async function genitiveTaskExerciseRoutes (app: FastifyZodInstance) {
     }
   }, async (req, reply) => {
     const tasks = await checkAnswers(app.prisma, req.body);
-    reply.status(200).send(tasks);
+    return reply.status(200).send(tasks);
   });
 }
