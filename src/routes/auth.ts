@@ -2,8 +2,8 @@ import { z } from 'zod';
 import bcrypt from 'bcrypt';
 import { findAdminById } from '#/services/admin/findAdminById.js';
 import { findStudentById } from '#/services/student/findStudentById.js';
-import { findUserById } from '#/services/auth/findUserById.js';
-import { findUserByLogin } from '#/services/auth/findUserByLogin.js';
+import { findUserById } from '#/services/user/findUserById.js';
+import { findUserByLogin } from '#/services/user/findUserByLogin.js';
 import type { FastifyZodInstance } from '#/server.js';
 
 const LoginBody = z.object({
