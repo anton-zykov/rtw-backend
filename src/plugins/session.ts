@@ -1,7 +1,7 @@
 import fp from 'fastify-plugin';
 import { fastifySession, type SessionStore } from '@fastify/session';
-import type { RedisClientType } from 'redis';
 import type { FastifyInstance, FastifyPluginAsync, Session } from 'fastify';
+import type { RedisClientType } from 'redis';
 
 declare module 'fastify' {
   interface Session {
@@ -10,7 +10,7 @@ declare module 'fastify' {
   }
 }
 
-class RedisStore implements SessionStore {
+export class RedisSessionStore implements SessionStore {
   constructor (
     private client: RedisClientType,
     private opts: {
@@ -65,22 +65,18 @@ class RedisStore implements SessionStore {
 
 export type SessionPluginOptions = {
   secret: string;
+  store: SessionStore | undefined;
 };
 
 export const sessionPlugin: FastifyPluginAsync<SessionPluginOptions> = fp(
   async (app: FastifyInstance, opts: SessionPluginOptions) => {
     const MS_TO_EXPIRE = 60 * 1000;
 
-    const store = new RedisStore(app.redis, {
-      prefix: 'sess:',
-      ttl: MS_TO_EXPIRE,
-    });
-
     await app.register(fastifySession, {
       secret: opts.secret,
       cookieName: 'sid',
       saveUninitialized: false,
-      store,
+      store: opts.store,
       rolling: true,
       cookie: {
         httpOnly: true,

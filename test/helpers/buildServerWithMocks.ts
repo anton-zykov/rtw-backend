@@ -16,6 +16,13 @@ export function buildServerWithMocks (
     redisPlugin,
     config: {
       logger: false,
+      cookie: {
+        secret: 'test_cookie_secret'
+      },
+      session: {
+        secret: 'ultimate_very_long_and_secure_test_session_secret',
+        store: undefined // default in-memory
+      },
       telegram: {
         token: undefined
       },

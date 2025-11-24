@@ -1,4 +1,5 @@
 import { Prisma } from '@prisma/client';
+import { loginAndGetCookie } from 'test/helpers/auth.js';
 import { buildServerWithMocks } from 'test/helpers/buildServerWithMocks.js';
 import { createPrismaMock } from 'test/helpers/createPrismaMock.js';
 import { createRedisMock } from 'test/helpers/createRedisMock.js';
@@ -6,14 +7,18 @@ import { afterAll, afterEach, beforeAll, describe, expect, it, vi } from 'vitest
 import { assignToStudent } from '#/services/genitiveTask/index.js';
 
 vi.mock('#/services/genitiveTask/assignToStudent.js', () => ({
-  assignGenitiveTasksToStudent: vi.fn(),
+  assignToStudent: vi.fn(),
 }));
 
 describe('genitive-task/student', () => {
   const prismaMock = createPrismaMock();
   const redisMock = createRedisMock();
   const app = buildServerWithMocks(prismaMock, redisMock);
-  beforeAll(async () => await app.ready());
+  let authCookie: string;
+  beforeAll(async () => {
+    await app.ready();
+    authCookie = await loginAndGetCookie(app);
+  });
   afterAll(async () => await app.close());
 
   describe('genitive task assign', () => {
@@ -34,6 +39,9 @@ describe('genitive-task/student', () => {
         method: 'POST',
         url: '/api/genitive-task/student/assign',
         payload: input,
+        headers: {
+          cookie: authCookie
+        }
       });
 
       expect(res.statusCode).toBe(200);
@@ -63,6 +71,9 @@ describe('genitive-task/student', () => {
         method: 'POST',
         url: '/api/genitive-task/student/assign',
         payload: input,
+        headers: {
+          cookie: authCookie
+        }
       });
 
       expect(res.statusCode).toBe(404);

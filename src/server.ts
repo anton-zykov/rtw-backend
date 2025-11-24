@@ -70,7 +70,7 @@ export function buildServer (deps: BuildDeps): FastifyZodInstance {
   app.register(deps.prismaPlugin, { prismaClient: deps.config.prisma.prismaClient });
   app.register(deps.redisPlugin, { redisClient: deps.config.redis.redisClient });
   app.register(deps.telegramPlugin, { token: deps.config.telegram.token });
-  app.register(sessionPlugin, { secret: deps.config.session.secret });
+  app.register(sessionPlugin, { secret: deps.config.session.secret, store: deps.config.session.store });
   app.register(authGuardPlugin);
 
   app.register(adminRoutes, { prefix: '/api/admin' });

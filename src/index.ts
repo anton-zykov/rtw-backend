@@ -5,6 +5,7 @@ import { redisPlugin } from '#/plugins/redis.js';
 import { telegramPlugin } from '#/plugins/telegram.js';
 import { createRedisClient } from '#/libs/redis.js';
 import { PrismaClient } from '@prisma/client';
+import { RedisSessionStore } from '#/plugins/session.js';
 
 const port = Number(process.env['PORT'] ?? 3000);
 const host = process.env['HOST'] ?? '0.0.0.0';
@@ -15,6 +16,8 @@ if (process.env['COOKIE_SECRET'] === undefined) {
 if (process.env['SESSION_SECRET'] === undefined) {
   throw new Error('SESSION_SECRET is not defined');
 }
+
+const redisClient = createRedisClient(process.env['REDIS_PORT'] ?? '6379');
 
 const app = buildServer({
   prismaPlugin,
@@ -27,6 +30,10 @@ const app = buildServer({
     },
     session: {
       secret: process.env['SESSION_SECRET'],
+      store: new RedisSessionStore(redisClient, {
+        prefix: 'sess:',
+        ttl: 60 * 1000,
+      })
     },
     telegram: {
       token: process.env['TELEGRAM_BOT_TOKEN']
@@ -35,7 +42,7 @@ const app = buildServer({
       prismaClient: new PrismaClient()
     },
     redis: {
-      redisClient: createRedisClient(process.env['REDIS_PORT'] ?? '6379')
+      redisClient,
     }
   }
 });

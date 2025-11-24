@@ -1,3 +1,4 @@
+import { loginAndGetCookie } from 'test/helpers/auth.js';
 import { buildServerWithMocks } from 'test/helpers/buildServerWithMocks.js';
 import { createPrismaMock } from 'test/helpers/createPrismaMock.js';
 import { createRedisMock } from 'test/helpers/createRedisMock.js';
@@ -7,7 +8,11 @@ describe('user routes', () => {
   const prismaMock = createPrismaMock();
   const redisMock = createRedisMock();
   const app = buildServerWithMocks(prismaMock, redisMock);
-  beforeAll(async () => await app.ready());
+  let authCookie: string;
+  beforeAll(async () => {
+    await app.ready();
+    authCookie = await loginAndGetCookie(app);
+  });
   afterAll(async () => await app.close());
 
   describe('user create', () => {
@@ -29,7 +34,10 @@ describe('user routes', () => {
       const res = await app.inject({
         method: 'POST',
         url: '/api/user/create',
-        payload: { login: 'Rich' },
+        payload: { login: 'Rich', password: 'test-password' },
+        headers: {
+          cookie: authCookie
+        }
       });
 
       expect(res.statusCode).toBe(201);
@@ -64,8 +72,12 @@ describe('user routes', () => {
           login: 'Rich',
           fullName: 'Richard',
           email: 'exa@ple.com',
-          telegramId: '@rich'
+          telegramId: '@rich',
+          password: 'test-password'
         },
+        headers: {
+          cookie: authCookie
+        }
       });
 
       expect(res.statusCode).toBe(201);
@@ -85,6 +97,9 @@ describe('user routes', () => {
         method: 'POST',
         url: '/api/user/create',
         payload: { login: 'AB' },
+        headers: {
+          cookie: authCookie
+        }
       });
 
       expect(res.statusCode).toBe(400);
@@ -109,6 +124,9 @@ describe('user routes', () => {
           id: 2,
           login: 'Rich'
         },
+        headers: {
+          cookie: authCookie
+        }
       });
 
       expect(res.statusCode).toBe(400);
@@ -141,6 +159,9 @@ describe('user routes', () => {
           email: 'exa@ple.com',
           telegramId: '@rich'
         },
+        headers: {
+          cookie: authCookie
+        }
       });
 
       expect(res.statusCode).toBe(200);
