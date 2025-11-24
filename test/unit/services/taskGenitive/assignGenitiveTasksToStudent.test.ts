@@ -1,4 +1,4 @@
-import { assignGenitiveTasksToStudent } from '#/services/genitiveTask/assignToStudent.js';
+import { assignToStudent } from '#/services/genitiveTask/index.js';
 import type { PrismaClient, StudentGenitiveTask } from '@prisma/client';
 
 import { describe, expect, it } from 'vitest';
@@ -22,7 +22,7 @@ describe('assign genitive tasks to student', () => {
       { taskId: 'task3' }
     ] as unknown as StudentGenitiveTask[]);
 
-    const { created, skipped } = await assignGenitiveTasksToStudent(prismaMock, input);
+    const { created, skipped } = await assignToStudent(prismaMock, input);
 
     expect(created).toEqual(['task3']);
     expect(skipped).toEqual(2);

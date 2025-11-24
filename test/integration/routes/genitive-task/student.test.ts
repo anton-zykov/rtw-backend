@@ -1,16 +1,18 @@
 import { Prisma } from '@prisma/client';
 import { buildServerWithMocks } from 'test/helpers/buildServerWithMocks.js';
 import { createPrismaMock } from 'test/helpers/createPrismaMock.js';
+import { createRedisMock } from 'test/helpers/createRedisMock.js';
 import { afterAll, afterEach, beforeAll, describe, expect, it, vi } from 'vitest';
-import { assignGenitiveTasksToStudent } from '#/services/genitiveTask/assignToStudent.js';
+import { assignToStudent } from '#/services/genitiveTask/index.js';
 
-vi.mock('#/services/genitiveTask/assignGenitiveTasksToStudent.js', () => ({
+vi.mock('#/services/genitiveTask/assignToStudent.js', () => ({
   assignGenitiveTasksToStudent: vi.fn(),
 }));
 
 describe('genitive-task/student', () => {
   const prismaMock = createPrismaMock();
-  const app = buildServerWithMocks(prismaMock);
+  const redisMock = createRedisMock();
+  const app = buildServerWithMocks(prismaMock, redisMock);
   beforeAll(async () => await app.ready());
   afterAll(async () => await app.close());
 
@@ -23,7 +25,7 @@ describe('genitive-task/student', () => {
         genitiveTaskIds: ['task1', 'task2', 'task3'],
       };
 
-      vi.mocked(assignGenitiveTasksToStudent).mockResolvedValue({
+      vi.mocked(assignToStudent).mockResolvedValue({
         created: ['task3'],
         skipped: 2
       });
@@ -47,7 +49,7 @@ describe('genitive-task/student', () => {
         genitiveTaskIds: ['task1', 'task2', 'task3'],
       };
 
-      vi.mocked(assignGenitiveTasksToStudent).mockRejectedValue(
+      vi.mocked(assignToStudent).mockRejectedValue(
         new Prisma.PrismaClientKnownRequestError(
           '',
           {

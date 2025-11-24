@@ -1,33 +1,13 @@
-import { buildServer, type FastifyZodInstance } from '#/server.js';
-import { prismaPlugin } from '#/plugins/prisma.js';
-import { telegramPlugin } from '#/plugins/__mocks__/telegram.js';
-import type { PrismaClient } from '@prisma/client';
-
+import { buildServerWithMocks } from 'test/helpers/buildServerWithMocks.js';
+import { createPrismaMock } from 'test/helpers/createPrismaMock.js';
+import { createRedisMock } from 'test/helpers/createRedisMock.js';
 import { afterAll, afterEach, beforeAll, describe, expect, it } from 'vitest';
-import { mockDeep } from 'vitest-mock-extended';
 
 describe('admin routes', () => {
-  let app: FastifyZodInstance;
-  const prismaMock = mockDeep<PrismaClient>();
-  Object.defineProperty(prismaMock, 'getter', { value: () => prismaMock });
-
-  beforeAll(async () => {
-    app = buildServer({
-      prismaPlugin,
-      telegramPlugin,
-      config: {
-        logger: false,
-        telegram: {
-          token: undefined
-        },
-        prisma: {
-          prismaClient: prismaMock
-        }
-      }
-    });
-    await app.ready();
-  });
-
+  const prismaMock = createPrismaMock();
+  const redisMock = createRedisMock();
+  const app = buildServerWithMocks(prismaMock, redisMock);
+  beforeAll(async () => await app.ready());
   afterAll(async () => await app.close());
 
   describe('admin create', () => {
