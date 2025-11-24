@@ -1,7 +1,7 @@
 import fp from 'fastify-plugin';
 import { fastifySession, type SessionStore } from '@fastify/session';
 import type { RedisClientType } from 'redis';
-import type { Session } from 'fastify';
+import type { FastifyInstance, FastifyPluginAsync, Session } from 'fastify';
 
 declare module 'fastify' {
   interface Session {
@@ -63,31 +63,31 @@ class RedisStore implements SessionStore {
   }
 }
 
-export const sessionPlugin = fp(async (app) => {
-  // If you're behind nginx/ALB with HTTPS:
-  // app.setTrustProxy(true);
+export type SessionPluginOptions = {
+  secret: string;
+};
 
-  const MS_TO_EXPIRE = 60 * 1000;
+export const sessionPlugin: FastifyPluginAsync<SessionPluginOptions> = fp(
+  async (app: FastifyInstance, opts: SessionPluginOptions) => {
+    const MS_TO_EXPIRE = 60 * 1000;
 
-  const store = new RedisStore(app.redis, {
-    prefix: 'sess:',
-    ttl: MS_TO_EXPIRE,
+    const store = new RedisStore(app.redis, {
+      prefix: 'sess:',
+      ttl: MS_TO_EXPIRE,
+    });
+
+    await app.register(fastifySession, {
+      secret: opts.secret,
+      cookieName: 'sid',
+      saveUninitialized: false,
+      store,
+      rolling: true,
+      cookie: {
+        httpOnly: true,
+        secure: 'auto',
+        sameSite: 'lax',
+        path: '/',
+        maxAge: MS_TO_EXPIRE,
+      },
+    });
   });
-
-  await app.register(fastifySession, {
-    secret:
-      process.env['SESSION_SECRET'] ??
-      'change-me-change-me-change-me-change-me',
-    cookieName: 'sid',
-    saveUninitialized: false,
-    store,
-    rolling: true,
-    cookie: {
-      httpOnly: true,
-      secure: 'auto',
-      sameSite: 'lax',
-      path: '/',
-      maxAge: MS_TO_EXPIRE,
-    },
-  });
-});

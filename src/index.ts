@@ -9,12 +9,25 @@ import { PrismaClient } from '@prisma/client';
 const port = Number(process.env['PORT'] ?? 3000);
 const host = process.env['HOST'] ?? '0.0.0.0';
 
+if (process.env['COOKIE_SECRET'] === undefined) {
+  throw new Error('COOKIE_SECRET is not defined');
+}
+if (process.env['SESSION_SECRET'] === undefined) {
+  throw new Error('SESSION_SECRET is not defined');
+}
+
 const app = buildServer({
   prismaPlugin,
   redisPlugin,
   telegramPlugin,
   config: {
     logger: true,
+    cookie: {
+      secret: process.env['COOKIE_SECRET'],
+    },
+    session: {
+      secret: process.env['SESSION_SECRET'],
+    },
     telegram: {
       token: process.env['TELEGRAM_BOT_TOKEN']
     },

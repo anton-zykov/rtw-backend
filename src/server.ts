@@ -10,7 +10,7 @@ import { fastifyCookie } from '@fastify/cookie';
 import type { PrismaPluginOptions } from '#/plugins/prisma.js';
 import type { RedisPluginOptions } from '#/plugins/redis.js';
 import type { TelegramPluginOptions } from '#/plugins/telegram.js';
-import { sessionPlugin } from '#/plugins/session.js';
+import { sessionPlugin, type SessionPluginOptions } from '#/plugins/session.js';
 import { authGuardPlugin } from '#/plugins/auth-guards.js';
 import {
   type ZodTypeProvider,
@@ -41,6 +41,9 @@ export type FastifyZodInstance = FastifyInstance<
   FastifyBaseLogger,
   ZodTypeProvider
 >;
+type FastifyCookieOptions = {
+  secret: string;
+};
 
 type BuildDeps = {
   prismaPlugin: FastifyPluginAsync<PrismaPluginOptions>;
@@ -48,6 +51,8 @@ type BuildDeps = {
   telegramPlugin: FastifyPluginAsync<TelegramPluginOptions>;
   config: {
     logger: boolean;
+    cookie: FastifyCookieOptions;
+    session: SessionPluginOptions;
     prisma: PrismaPluginOptions;
     redis: RedisPluginOptions;
     telegram: TelegramPluginOptions;
@@ -59,11 +64,13 @@ export function buildServer (deps: BuildDeps): FastifyZodInstance {
 
   app.setValidatorCompiler(validatorCompiler);
   app.setSerializerCompiler(serializerCompiler);
-  app.register(fastifyCookie);
+  app.register(fastifyCookie, {
+    secret: deps.config.cookie.secret,
+  });
   app.register(deps.prismaPlugin, { prismaClient: deps.config.prisma.prismaClient });
   app.register(deps.redisPlugin, { redisClient: deps.config.redis.redisClient });
   app.register(deps.telegramPlugin, { token: deps.config.telegram.token });
-  app.register(sessionPlugin);
+  app.register(sessionPlugin, { secret: deps.config.session.secret });
   app.register(authGuardPlugin);
 
   app.register(adminRoutes, { prefix: '/api/admin' });
