@@ -1,29 +1,38 @@
+import { loginAndGetCookie } from 'test/helpers/auth.js';
 import { buildTestServer } from 'test/helpers/buildTestServer.js';
-import { createPrismaMock } from 'test/helpers/createPrismaMock.js';
 import { createRedisMock } from 'test/helpers/createRedisMock.js';
-import { afterAll, assert, beforeAll, describe, expect, it, vi } from 'vitest';
+import { prismaClient } from 'test/helpers/prismaClient.js';
+import { afterAll, assert, beforeAll, describe, expect, it } from 'vitest';
 
-vi.mock('#/services/user/index.js', () => ({
-  findUserByLogin: vi.fn(({ login }) => ({
-    id: 1,
-    login,
-    passwordHash: '$2a$10$kcbWuJ6BMZ8Rigofi6YC0.DXrVJ9sagxxYZKCe5jVbd3M6EHkcwM6' // hash for 'test-password'
-  })),
-}));
-
-describe('auth', () => {
-  const prismaMock = createPrismaMock();
+describe('/auth', () => {
   const redisMock = createRedisMock();
-  const app = buildTestServer(prismaMock, redisMock);
-  beforeAll(async () => await app.ready());
+  const app = buildTestServer(prismaClient, redisMock);
+  let authCookie: string;
+  beforeAll(async () => {
+    await app.ready();
+    authCookie = await loginAndGetCookie(app);
+  });
   afterAll(async () => await app.close());
 
   it('should be able to login and get session', async () => {
+    const random = Math.floor(Math.random() * 1000);
+    const user = await app.inject({
+      method: 'POST',
+      url: '/api/user/create',
+      payload: {
+        login: `Tester${random}`,
+        password: 'test-password',
+      },
+      headers: {
+        cookie: authCookie
+      }
+    });
+
     const res = await app.inject({
       method: 'POST',
       url: '/api/auth/login',
       payload: {
-        login: 'tester',
+        login: user.json().login,
         password: 'test-password',
       }
     });
