@@ -4,6 +4,9 @@ export default defineConfig({
   test: {
     environment: 'node',
     // setupFiles: ['test/setup.ts'],
+    globalSetup: [
+      'test/setup.ts'
+    ],
     clearMocks: true,
     reporters: ['default'],
     coverage: {

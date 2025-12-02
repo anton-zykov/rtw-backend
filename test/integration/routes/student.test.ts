@@ -1,5 +1,5 @@
 import { loginAndGetCookie } from 'test/helpers/auth.js';
-import { buildServerWithMocks } from 'test/helpers/buildServerWithMocks.js';
+import { buildTestServer } from 'test/helpers/buildTestServer.js';
 import { createPrismaMock } from 'test/helpers/createPrismaMock.js';
 import { createRedisMock } from 'test/helpers/createRedisMock.js';
 import { afterAll, afterEach, beforeAll, describe, expect, it } from 'vitest';
@@ -7,7 +7,7 @@ import { afterAll, afterEach, beforeAll, describe, expect, it } from 'vitest';
 describe('student routes', () => {
   const prismaMock = createPrismaMock();
   const redisMock = createRedisMock();
-  const app = buildServerWithMocks(prismaMock, redisMock);
+  const app = buildTestServer(prismaMock, redisMock);
   let authCookie: string;
   beforeAll(async () => {
     await app.ready();

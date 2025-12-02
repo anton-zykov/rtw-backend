@@ -6,8 +6,8 @@ import type { PrismaClient } from '@prisma/client';
 import type { RedisClientType } from 'redis';
 import type { DeepMockProxy } from 'vitest-mock-extended';
 
-export function buildServerWithMocks (
-  prismaMock: DeepMockProxy<PrismaClient>,
+export function buildTestServer (
+  prismaClient: DeepMockProxy<PrismaClient> | PrismaClient,
   redisMock: DeepMockProxy<RedisClientType>
 ): FastifyZodInstance {
   return buildServer({
@@ -27,7 +27,7 @@ export function buildServerWithMocks (
         token: undefined
       },
       prisma: {
-        prismaClient: prismaMock
+        prismaClient,
       },
       redis: {
         redisClient: redisMock
