@@ -1,4 +1,5 @@
 import { defineConfig } from 'vitest/config';
+import path from 'node:path';
 
 export default defineConfig({
   test: {
@@ -8,16 +9,19 @@ export default defineConfig({
       'test/setup.ts'
     ],
     clearMocks: true,
-    reporters: ['default'],
+    reporters: [['tree']],
     coverage: {
       reporter: ['text', 'html'],
       provider: 'v8',
       reportsDirectory: './coverage',
       include: ['src/**/*.{ts,tsx,js}'],
       exclude: ['**/*.test.*', 'test/**', 'node_modules/**']
-    }
+    },
   },
   resolve: {
-    alias: { '#': new URL('./src/', import.meta.url).pathname }
+    alias: {
+      '#': path.resolve(__dirname, 'src'),
+      test: path.resolve(__dirname, 'test'),
+    }
   }
 });
