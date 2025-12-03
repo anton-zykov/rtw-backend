@@ -4,7 +4,7 @@ import { assignToStudent } from '#/services/genitiveTask/index.js';
 import type { FastifyZodInstance } from '#/server.js';
 
 const AssignToStudentBody = z.object({
-  studentId: z.number(),
+  studentId: z.uuidv4(),
   genitiveTaskIds: z.array(z.string()),
 }).strict();
 

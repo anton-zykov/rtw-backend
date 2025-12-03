@@ -6,7 +6,7 @@ model GenitiveTask {
 }
 
 model StudentGenitiveTask {
-  studentId  Int
+  studentId  String       @db.Uuid
   taskId     String
   weight     Int          @default(10)
 

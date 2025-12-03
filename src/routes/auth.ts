@@ -11,7 +11,7 @@ const LoginBody = z.object({
 }).strict();
 
 const MeReply = z.object({
-  id: z.number(),
+  id: z.uuidv4(),
   login: z.string()
 }).strict();
 

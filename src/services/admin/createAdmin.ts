@@ -4,7 +4,7 @@ import type { PrismaClient, Admin } from '@prisma/client';
 export async function createAdmin (
   prisma: PrismaClient,
   input: {
-    id: number;
+    id: string;
   }
 ): Promise<Admin> {
   const user = await prisma.user.findUnique({

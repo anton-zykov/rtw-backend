@@ -49,7 +49,7 @@ export const authGuardPlugin = fp(async (app) => {
       if (!request.session.userId) {
         return reply.code(401).send({ message: 'Unauthorized' });
       }
-      if (request.session.role !== 'student' || request.session.userId !== (request.body as { studentId?: number }).studentId) {
+      if (request.session.role !== 'student' || request.session.userId !== (request.body as { studentId?: string }).studentId) {
         return reply.code(403).send({ message: 'Forbidden' });
       }
     }

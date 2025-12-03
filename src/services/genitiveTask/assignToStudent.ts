@@ -3,7 +3,7 @@ import { PrismaClient } from '@prisma/client';
 export async function assignToStudent (
   prisma: PrismaClient,
   input: {
-    studentId: number;
+    studentId: string;
     genitiveTaskIds: string[];
   }
 ): Promise<{

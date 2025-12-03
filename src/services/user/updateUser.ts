@@ -3,7 +3,7 @@ import type { PrismaClient, User } from '@prisma/client';
 export async function updateUser (
   prisma: PrismaClient,
   input: {
-    id: number;
+    id: string;
     login?: string;
     fullName?: string;
     email?: string;

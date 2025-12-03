@@ -3,7 +3,7 @@ import { checkAnswers, selectForExercise } from '#/services/genitiveTask/index.j
 import type { FastifyZodInstance } from '#/server.js';
 
 const GetGenitiveExerciseBody = z.object({
-  studentId: z.number().int().positive(),
+  studentId: z.uuidv4(),
   amount: z.number().int().positive().optional(),
 }).strict();
 
@@ -24,7 +24,7 @@ const GetGenitiveExerciseReply = z.array(
 );
 
 const CheckGenitiveExerciseBody = z.object({
-  studentId: z.number(),
+  studentId: z.uuidv4(),
   exercise: z.array(
     z.object({
       taskId: z.uuid(),

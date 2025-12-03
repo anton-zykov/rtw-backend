@@ -4,11 +4,11 @@ import { CustomError } from '#/utils/CustomError.js';
 import type { FastifyZodInstance } from '#/server.js';
 
 const CreateAdminBody = z.object({
-  id: z.number().int().positive(),
+  id: z.uuidv4(),
 }).strict();
 
 const CreateAdminReply = z.object({
-  id: z.number().int().positive(),
+  id: z.uuidv4(),
 });
 
 export async function adminRoutes (app: FastifyZodInstance) {

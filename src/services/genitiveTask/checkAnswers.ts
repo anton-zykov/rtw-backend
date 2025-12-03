@@ -3,7 +3,7 @@ import type { PrismaClient, StudentGenitiveTask } from '@prisma/client';
 export async function checkAnswers (
   prisma: PrismaClient,
   input: {
-    studentId: number;
+    studentId: string;
     exercise: {
       taskId: string;
       answer: string;

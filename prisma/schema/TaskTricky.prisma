@@ -6,7 +6,7 @@ model TrickyTask {
 }
 
 model StudentTrickyTask {
-  studentId  Int
+  studentId  String     @db.Uuid
   taskId     String
   weight     Int        @default(10)
 

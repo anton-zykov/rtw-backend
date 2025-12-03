@@ -9,7 +9,7 @@ export async function selectForExercise (
   prisma: PrismaClient,
   redis: RedisClientType,
   input: {
-    studentId: number;
+    studentId: string;
     amount?: number;
   }
 ): Promise<StudentGenitiveTaskWithTaskDetails[]> {

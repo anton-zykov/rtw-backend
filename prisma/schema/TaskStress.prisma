@@ -5,7 +5,7 @@ model StressTask {
 }
 
 model StudentStressTask {
-  studentId  Int
+  studentId  String    @db.Uuid
   taskId     String
   weight     Int       @default(10)
 

@@ -4,11 +4,11 @@ import { CustomError } from '#/utils/CustomError.js';
 import type { FastifyZodInstance } from '#/server.js';
 
 const CreateStudentBody = z.object({
-  id: z.number().int().positive(),
+  id: z.uuidv4(),
 }).strict();
 
 const CreateStudentReply = z.object({
-  id: z.number().int().positive(),
+  id: z.uuidv4(),
 });
 
 export async function studentRoutes (app: FastifyZodInstance) {

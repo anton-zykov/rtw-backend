@@ -4,7 +4,7 @@ import type { PrismaClient, Student } from '@prisma/client';
 export async function createStudent (
   prisma: PrismaClient,
   input: {
-    id: number;
+    id: string;
   }
 ): Promise<Student> {
   const user = await prisma.user.findUnique({

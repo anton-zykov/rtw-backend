@@ -11,7 +11,7 @@ const CreateUserBody = z.object({
 }).strict();
 
 const CreateUserReply = z.object({
-  id: z.number().int().positive(),
+  id: z.uuidv4(),
   login: z.string(),
   fullName: z.string().nullable(),
   email: z.email().nullable(),
@@ -21,7 +21,7 @@ const CreateUserReply = z.object({
 });
 
 const UpdateUserBody = z.object({
-  id: z.number().int().positive(),
+  id: z.uuidv4(),
   login: z.string().min(3, 'new login must be at least 3 characters long').optional(),
   fullName: z.string().optional(),
   email: z.email().optional(),
@@ -29,7 +29,7 @@ const UpdateUserBody = z.object({
 }).strict();
 
 const UpdateUserReply = z.object({
-  id: z.number().int().positive(),
+  id: z.uuidv4(),
   login: z.string().nullable(),
   fullName: z.string().nullable(),
   email: z.email().nullable(),

@@ -5,7 +5,7 @@ import type { RedisClientType } from 'redis';
 
 declare module 'fastify' {
   interface Session {
-    userId: number;
+    userId: string;
     role: 'admin' | 'student' | 'not-set';
   }
 }
