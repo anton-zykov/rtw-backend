@@ -33,7 +33,7 @@ import type { FastifyInstance } from 'fastify';
 //   )),
 // }));
 
-export async function loginAndGetCookie (app: FastifyInstance) {
+export async function loginSuperAdminAndGetCookie (app: FastifyInstance) {
   const res = await app.inject({
     method: 'POST',
     url: '/api/auth/login',

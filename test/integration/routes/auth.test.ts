@@ -1,4 +1,4 @@
-import { loginAndGetCookie } from 'test/helpers/auth.js';
+import { loginSuperAdminAndGetCookie } from 'test/helpers/auth.js';
 import { buildTestServer } from 'test/helpers/buildTestServer.js';
 import { createRedisMock } from 'test/helpers/createRedisMock.js';
 import { prismaClient } from 'test/helpers/prismaClient.js';
@@ -11,7 +11,7 @@ describe('/auth', () => {
   let adminCookie: string;
   beforeAll(async () => {
     await app.ready();
-    adminCookie = await loginAndGetCookie(app);
+    adminCookie = await loginSuperAdminAndGetCookie(app);
   });
   afterAll(async () => await app.close());
 
@@ -56,7 +56,7 @@ describe('/auth', () => {
       });
 
       expect(meRes.statusCode).toBe(200);
-      expect(meRes.json().login).toBe(user.login);
+      expect(meRes.json()).toStrictEqual({ id: user.id, login: user.login });
     });
 
     it('then should remove cookie on logout, old session should be invalidated', async () => {
@@ -80,7 +80,7 @@ describe('/auth', () => {
       });
 
       expect(meAuthenticatedRes.statusCode).toBe(200);
-      expect(meAuthenticatedRes.json().login).toBe(user.login);
+      expect(meAuthenticatedRes.json()).toStrictEqual({ id: user.id, login: user.login });
 
       const logoutRes = await app.inject({
         method: 'POST',
