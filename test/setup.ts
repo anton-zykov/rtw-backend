@@ -1,4 +1,4 @@
-// import isPortReachable from 'is-port-reachable';
+import isInCi from 'is-in-ci';
 import fs from 'fs';
 import path from 'path';
 import dockerCompose from 'docker-compose';
@@ -6,10 +6,6 @@ import { execSync } from 'child_process';
 import { prismaClient } from 'test/helpers/prismaClient.js';
 
 export async function setup () {
-  // ️️️✅ Best Practice: Speed up during development, if already live then do nothing
-  // const isDBReachable = await isPortReachable(54310);
-  // if (!isDBReachable) {
-  // ️️️✅ Best Practice: Start the infrastructure within a test hook - No failures occur because the DB is down
   await dockerCompose.upAll({
     cwd: path.join(__dirname),
     log: true,
@@ -43,19 +39,12 @@ export async function setup () {
   for (const stmt of statements) {
     await prismaClient.$executeRawUnsafe(stmt);
   }
-  // }
 }
 
 export async function teardown () {
-  // if (isCI) {
-  // ️️️✅ Best Practice: Leave the DB up in dev environment
-  await dockerCompose.down({
-    cwd: path.join(__dirname)
-  });
-  // } else {
-  // ✅ Best Practice: Clean the database occasionally
-  // if (Math.ceil(Math.random() * 10) === 10) {
-  //  await new OrderRepository().cleanup();
-  // }
-  // }
+  if (isInCi) {
+    await dockerCompose.down({
+      cwd: path.join(__dirname)
+    });
+  }
 }
