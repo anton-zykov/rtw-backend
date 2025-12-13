@@ -2,8 +2,8 @@ import { loginSuperAdminAndGetCookie } from 'test/helpers/auth.js';
 import { buildTestServer } from 'test/helpers/buildTestServer.js';
 import { createRedisMock } from 'test/helpers/createRedisMock.js';
 import { prismaClient } from 'test/helpers/prismaClient.js';
+import { createTestUser } from 'test/hooks/createTestUser.js';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
-import type { User } from '@prisma/client';
 
 describe('/auth', () => {
   const redisMock = createRedisMock();
@@ -15,20 +15,9 @@ describe('/auth', () => {
   });
   afterAll(async () => await app.close());
 
-  let user: User;
+  let user: Awaited<ReturnType<typeof createTestUser>>;
   beforeAll(async () => {
-    const random = Math.floor(Math.random() * 1000);
-    user = (await app.inject({
-      method: 'POST',
-      url: '/api/user/create',
-      payload: {
-        login: `Tester${random}`,
-        password: 'correct-password',
-      },
-      headers: {
-        cookie: adminCookie
-      }
-    })).json();
+    user = await createTestUser(app, adminCookie);
   });
 
   describe('/login', () => {

@@ -10,7 +10,7 @@ const CreateUserBody = z.object({
   telegramId: z.string().regex(/^@/).optional(),
 }).strict();
 
-const CreateUserReply = z.object({
+export const CreateUserReply = z.object({
   id: z.uuidv4(),
   login: z.string(),
   fullName: z.string().nullable(),
