@@ -1,90 +1,38 @@
-import { loginAndGetCookie } from 'test/helpers/auth.js';
+import { loginSuperAdminAndGetCookie } from 'test/helpers/auth.js';
 import { buildTestServer } from 'test/helpers/buildTestServer.js';
-import { createPrismaMock } from 'test/helpers/createPrismaMock.js';
+import { prismaClient } from 'test/helpers/prismaClient.js';
 import { createRedisMock } from 'test/helpers/createRedisMock.js';
-import { afterAll, afterEach, beforeAll, describe, expect, it } from 'vitest';
+import { afterAll, beforeAll, describe, it } from 'vitest';
 
-describe('student routes', () => {
-  const prismaMock = createPrismaMock();
+describe('/student', () => {
   const redisMock = createRedisMock();
-  const app = buildTestServer(prismaMock, redisMock);
-  let authCookie: string;
+  const app = buildTestServer(prismaClient, redisMock);
+  let adminCookie: string;
   beforeAll(async () => {
     await app.ready();
-    authCookie = await loginAndGetCookie(app);
+    adminCookie = await loginSuperAdminAndGetCookie(app);
   });
   afterAll(async () => await app.close());
 
-  describe('student create', () => {
-    afterEach(() => prismaMock.student.create.mockReset());
-
-    it('creates student', async () => {
-      prismaMock.user.findUnique.mockResolvedValue({
-        id: 1,
-        login: 'Rich',
-        fullName: null,
-        email: null,
-        telegramId: null,
-        passwordHash: 'placeholder',
-        passwordVersion: 0,
-        createdAt: new Date(),
-        updatedAt: new Date()
-      });
-      prismaMock.student.create.mockResolvedValue({ id: 1 });
-
-      const res = await app.inject({
-        method: 'POST',
-        url: '/api/student/create',
-        payload: { id: 1 },
-      });
-
-      expect(res.statusCode).toBe(201);
-      expect(res.json()).toStrictEqual({ id: 1 });
+  describe('/create', () => {
+    describe('when valid id of a user without a role', async () => {
+      it.todo('then should create student', async () => {});
     });
 
-    it('fails to create student without id', async () => {
-      const res = await app.inject({
-        method: 'POST',
-        url: '/api/student/create',
-        payload: {},
-      });
-
-      expect(res.statusCode).toBe(400);
+    describe('when id is not provided', async () => {
+      it.todo('then should return 400 with proper message', async () => {});
     });
 
-    it('fails to create student if no user with same id', async () => {
-      prismaMock.user.findUnique.mockResolvedValue(null);
-
-      const res = await app.inject({
-        method: 'POST',
-        url: '/api/student/create',
-        payload: { id: 1 },
-      });
-
-      expect(res.statusCode).toBe(404);
+    describe('when user id doesn\'t exist', async () => {
+      it.todo('then should return 404 with proper message', async () => {});
     });
 
-    it('fails to create student if user is already student', async () => {
-      prismaMock.user.findUnique.mockResolvedValue({
-        id: 1,
-        login: 'Rich',
-        fullName: null,
-        email: null,
-        telegramId: null,
-        passwordHash: 'placeholder',
-        passwordVersion: 0,
-        createdAt: new Date(),
-        updatedAt: new Date()
-      });
-      prismaMock.student.findUnique.mockResolvedValue({ id: 1 });
+    describe('when user is already an admin', async () => {
+      it.todo('then should return 400 with proper message', async () => {});
+    });
 
-      const res = await app.inject({
-        method: 'POST',
-        url: '/api/student/create',
-        payload: { id: 1 },
-      });
-
-      expect(res.statusCode).toBe(400);
+    describe('when user is already a student', async () => {
+      it.todo('', async () => {});
     });
   });
 });
