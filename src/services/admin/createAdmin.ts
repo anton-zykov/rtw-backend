@@ -11,15 +11,15 @@ export async function createAdmin (
     where: {
       id: input.id,
     },
+    include: {
+      admin: true,
+      teacher: true,
+      student: true
+    }
   });
   if (!user) throw new CustomError('User not found', 404);
-
-  const existingStudent = await prisma.student.findUnique({
-    where: {
-      id: input.id,
-    },
-  });
-  if (existingStudent) throw new CustomError('Student cannot be admin', 400);
+  if (user.teacher || user.student) throw new CustomError('The user already has other role', 409);
+  if (user.admin) throw new CustomError('The user is already admin', 409);
 
   const admin = await prisma.admin.create({
     data: input,
