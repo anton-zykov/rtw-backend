@@ -14,12 +14,13 @@ TRUNCATE TABLE
 RESTART IDENTITY CASCADE;
 
 INSERT INTO "User" (id, login, "passwordHash") VALUES
-  ('d6ff850c-5e8c-466d-95d9-03be8d383534', 'Alice', '$2a$10$LzcYoDDAutsZ.mlE5IPh7uzHQS4zHjJojormjB66dpbBABhCaBcR2'),
+  ('d6ff850c-5e8c-466d-95d9-03be8d383534', 'Admin', '$2a$10$LzcYoDDAutsZ.mlE5IPh7uzHQS4zHjJojormjB66dpbBABhCaBcR2'),
+  ('13c88df2-b3de-4de5-a476-31985427a5a6', 'Teacher', '$2a$10$LzcYoDDAutsZ.mlE5IPh7uzHQS4zHjJojormjB66dpbBABhCaBcR2'),
   ('b53b7776-3a9e-4cfb-9dbc-1a24af5234df', 'Bob', '$2a$10$LzcYoDDAutsZ.mlE5IPh7uzHQS4zHjJojormjB66dpbBABhCaBcR2');
 
 INSERT INTO "Admin" (id) VALUES ('d6ff850c-5e8c-466d-95d9-03be8d383534');
-
-INSERT INTO "Student" (id) VALUES ('b53b7776-3a9e-4cfb-9dbc-1a24af5234df');
+INSERT INTO "Teacher" (id) VALUES ('13c88df2-b3de-4de5-a476-31985427a5a6');
+INSERT INTO "Student" (id, "teacherId") VALUES ('b53b7776-3a9e-4cfb-9dbc-1a24af5234df', '13c88df2-b3de-4de5-a476-31985427a5a6');
 
 INSERT INTO "GenitiveTask" (id, nominative, options) VALUES
   ('051b6988-1bec-4697-8e61-f73e34fb4148', 'инженер', '[{"word": "инженеры", "correct": true}, {"word": "инженера", "correct": false}]'),

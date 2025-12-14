@@ -8,19 +8,28 @@ model User {
   passwordVersion Int      @default(0)
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt @default(now())
-  student         Student?
   admin           Admin?
-}
-
-model Student {
-  id            String                @unique @db.Uuid
-  user          User                  @relation(fields: [id], references: [id])
-  genitiveTasks StudentGenitiveTask[]
-  stressTasks   StudentStressTask[]
-  trickyTasks   StudentTrickyTask[]
+  student         Student?
+  teacher         Teacher?
 }
 
 model Admin {
   id   String  @unique @db.Uuid
   user User    @relation(fields: [id], references: [id])
+}
+
+model Student {
+  id            String                @unique @db.Uuid
+  user          User                  @relation(fields: [id], references: [id])
+  teacherId     String                @db.Uuid
+  teacher       Teacher               @relation(fields: [teacherId], references: [id])
+  genitiveTasks StudentGenitiveTask[]
+  stressTasks   StudentStressTask[]
+  trickyTasks   StudentTrickyTask[]
+}
+
+model Teacher {
+  id       String    @unique @db.Uuid
+  user     User      @relation(fields: [id], references: [id])
+  students Student[]
 }
