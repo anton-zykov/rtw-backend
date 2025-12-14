@@ -3,7 +3,6 @@ import { buildTestServer } from 'test/helpers/buildTestServer.js';
 import { prismaClient } from 'test/helpers/prismaClient.js';
 import { createRedisMock } from 'test/helpers/createRedisMock.js';
 import { afterAll, beforeAll, describe, it } from 'vitest';
-import { de } from 'zod/v4/locales';
 
 describe('genitive-task/student', () => {
   const redisMock = createRedisMock();
