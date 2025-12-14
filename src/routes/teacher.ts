@@ -4,7 +4,7 @@ import { CustomError } from '#/utils/CustomError.js';
 import type { FastifyZodInstance } from '#/server.js';
 
 const CreateTeacherBody = z.object({
-  id: z.uuidv4(),
+  id: z.uuidv4('User id is required'),
 }).strict();
 
 const CreateTeacherReply = z.object({
