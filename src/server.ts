@@ -28,6 +28,7 @@ import {
   stressTaskPoolRoutes,
   stressTaskStudentRoutes,
   studentRoutes,
+  teacherRoutes,
   trickyTaskExerciseRoutes,
   trickyTaskPoolRoutes,
   trickyTaskStudentRoutes,
@@ -64,9 +65,7 @@ export function buildServer (deps: BuildDeps): FastifyZodInstance {
 
   app.setValidatorCompiler(validatorCompiler);
   app.setSerializerCompiler(serializerCompiler);
-  app.register(fastifyCookie, {
-    secret: deps.config.cookie.secret,
-  });
+  app.register(fastifyCookie, { secret: deps.config.cookie.secret });
   app.register(deps.prismaPlugin, { prismaClient: deps.config.prisma.prismaClient });
   app.register(deps.redisPlugin, { redisClient: deps.config.redis.redisClient });
   app.register(deps.telegramPlugin, { token: deps.config.telegram.token });
@@ -83,6 +82,7 @@ export function buildServer (deps: BuildDeps): FastifyZodInstance {
   app.register(stressTaskExerciseRoutes, { prefix: '/api/stress-task/exercise' });
   app.register(stressTaskPoolRoutes, { prefix: '/api/stress-task/pool' });
   app.register(stressTaskStudentRoutes, { prefix: '/api/stress-task/student' });
+  app.register(teacherRoutes, { prefix: '/api/teacher' });
   app.register(trickyTaskExerciseRoutes, { prefix: '/api/tricky-task/exercise' });
   app.register(trickyTaskPoolRoutes, { prefix: '/api/tricky-task/pool' });
   app.register(trickyTaskStudentRoutes, { prefix: '/api/tricky-task/student' });

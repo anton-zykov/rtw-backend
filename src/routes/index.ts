@@ -12,6 +12,7 @@ import {
   stressTaskExerciseRoutes
 } from './stress-task/index.js';
 import { studentRoutes } from './student.js';
+import { teacherRoutes } from './teacher.js';
 import {
   trickyTaskPoolRoutes,
   trickyTaskStudentRoutes,
@@ -30,6 +31,7 @@ export {
   stressTaskPoolRoutes,
   stressTaskStudentRoutes,
   studentRoutes,
+  teacherRoutes,
   trickyTaskExerciseRoutes,
   trickyTaskPoolRoutes,
   trickyTaskStudentRoutes,
