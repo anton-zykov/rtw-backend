@@ -5,6 +5,7 @@ export async function createStudent (
   prisma: PrismaClient,
   input: {
     id: string;
+    teacherId: string;
   }
 ): Promise<Student> {
   const user = await prisma.user.findUnique({

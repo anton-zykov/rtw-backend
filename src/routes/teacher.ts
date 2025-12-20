@@ -7,7 +7,7 @@ const CreateTeacherBody = z.object({
   id: z.uuidv4('User id is required'),
 }).strict();
 
-const CreateTeacherReply = z.object({
+export const CreateTeacherReply = z.object({
   id: z.uuidv4(),
 });
 

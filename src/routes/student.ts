@@ -5,6 +5,7 @@ import type { FastifyZodInstance } from '#/server.js';
 
 const CreateStudentBody = z.object({
   id: z.uuidv4(),
+  teacherId: z.uuidv4(),
 }).strict();
 
 const CreateStudentReply = z.object({

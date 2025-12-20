@@ -2,7 +2,7 @@ import { loginSuperAdminAndGetCookie } from 'test/helpers/auth.js';
 import { buildTestServer } from 'test/helpers/buildTestServer.js';
 import { prismaClient } from 'test/helpers/prismaClient.js';
 import { createRedisMock } from 'test/helpers/createRedisMock.js';
-import { createTestUser } from 'test/hooks/index.js';
+import { createTestUser, createTeacher } from 'test/hooks/index.js';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 
 describe('/teacher', () => {
@@ -86,7 +86,7 @@ describe('/teacher', () => {
           method: 'POST',
           url: '/api/teacher/create',
           payload: {
-            id: 'a2c6858a-130a-42e8-8b87-e89f89c4d887'
+            id: 'a2c6858a-130a-42e8-8b87-e89f89c4d887' // non-existent id
           },
           headers: {
             cookie: adminCookie
@@ -132,17 +132,7 @@ describe('/teacher', () => {
     describe('when user is already a teacher', async () => {
       it('then should return 409 with proper message', async () => {
         const user = await createTestUser(app, adminCookie);
-
-        await app.inject({
-          method: 'POST',
-          url: '/api/teacher/create',
-          payload: {
-            id: user.id
-          },
-          headers: {
-            cookie: adminCookie
-          }
-        });
+        await createTeacher(app, adminCookie, user.id);
 
         const res = await app.inject({
           method: 'POST',
@@ -163,7 +153,24 @@ describe('/teacher', () => {
 
   describe('/delete', () => {
     describe('when valid id of a teacher', async () => {
-      it.todo('then should delete teacher', async () => {});
+      it('then should delete teacher', async () => {
+        const user = await createTestUser(app, adminCookie);
+        await createTeacher(app, adminCookie, user.id);
+
+        const res = await app.inject({
+          method: 'DELETE',
+          url: '/api/teacher/delete',
+          payload: {
+            id: user.id
+          },
+          headers: {
+            cookie: adminCookie
+          }
+        });
+
+        expect(res.statusCode).toBe(200);
+        // TODO: getUser to check that teacher was deleted
+      });
       it.todo('then all connected students should be removed', async () => {});
       it.todo('then all connected tasks should be removed', async () => {});
     });
