@@ -1,5 +1,1 @@
-import { createStressTasks } from './createStressTasks.js';
-
-export {
-  createStressTasks
-};
+export { createStressTasks } from './createStressTasks.js';

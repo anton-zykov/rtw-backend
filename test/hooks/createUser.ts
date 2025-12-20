@@ -1,8 +1,8 @@
-import { CreateUserReply } from '#/routes/user.js';
+import { CreateUserReply } from '#/routes/user/index.js';
 import type { FastifyZodInstance } from '#/server.js';
 import type z from 'zod';
 
-export async function createTestUser (
+export async function createUser (
   app: FastifyZodInstance,
   adminCookie: string
 ) {

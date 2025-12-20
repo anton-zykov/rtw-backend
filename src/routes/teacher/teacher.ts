@@ -1,19 +1,8 @@
 import { z } from 'zod';
+import { CreateTeacherBody, CreateTeacherReply, DeleteTeacherBody } from './teacher.schema.js';
 import { createTeacher, deleteTeacher } from '#/services/teacher/index.js';
 import { CustomError } from '#/utils/CustomError.js';
 import type { FastifyZodInstance } from '#/server.js';
-
-const CreateTeacherBody = z.object({
-  id: z.uuidv4('User id is required'),
-}).strict();
-
-export const CreateTeacherReply = z.object({
-  id: z.uuidv4(),
-});
-
-const DeleteTeacherBody = z.object({
-  id: z.uuidv4(),
-});
 
 export async function teacherRoutes (app: FastifyZodInstance) {
   app.post('/create', {

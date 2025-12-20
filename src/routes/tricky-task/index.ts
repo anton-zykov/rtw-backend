@@ -1,9 +1,3 @@
-import { trickyTaskExerciseRoutes } from './exercise.js';
-import { trickyTaskPoolRoutes } from './pool.js';
-import { trickyTaskStudentRoutes } from './student.js';
-
-export {
-  trickyTaskExerciseRoutes,
-  trickyTaskPoolRoutes,
-  trickyTaskStudentRoutes
-};
+export { trickyTaskExerciseRoutes } from './exercise.js';
+export { trickyTaskPoolRoutes } from './pool.js';
+export { trickyTaskStudentRoutes } from './student.js';

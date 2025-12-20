@@ -2,7 +2,7 @@ import { loginSuperAdminAndGetCookie } from 'test/helpers/auth.js';
 import { buildTestServer } from 'test/helpers/buildTestServer.js';
 import { createRedisMock } from 'test/helpers/createRedisMock.js';
 import { prismaClient } from 'test/helpers/prismaClient.js';
-import { createTestUser } from 'test/hooks/createTestUser.js';
+import { createUser } from 'test/hooks/createUser.js';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 
 describe('/auth', () => {
@@ -15,9 +15,9 @@ describe('/auth', () => {
   });
   afterAll(async () => await app.close());
 
-  let user: Awaited<ReturnType<typeof createTestUser>>;
+  let user: Awaited<ReturnType<typeof createUser>>;
   beforeAll(async () => {
-    user = await createTestUser(app, adminCookie);
+    user = await createUser(app, adminCookie);
   });
 
   describe('/login', () => {

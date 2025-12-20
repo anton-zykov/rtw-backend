@@ -1,11 +1,4 @@
-import { createUser } from './createUser.js';
-import { findUserById } from './findUserById.js';
-import { findUserByLogin } from './findUserByLogin.js';
-import { updateUser } from './updateUser.js';
-
-export {
-  createUser,
-  findUserById,
-  findUserByLogin,
-  updateUser
-};
+export { createUser } from './createUser.js';
+export { findUserById } from './findUserById.js';
+export { findUserByLogin } from './findUserByLogin.js';
+export { updateUser } from './updateUser.js';

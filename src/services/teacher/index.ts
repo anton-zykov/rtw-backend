@@ -1,9 +1,3 @@
-import { createTeacher } from './createTeacher.js';
-import { deleteTeacher } from './deleteTeacher.js';
-import { findTeacherById } from './findTeacherById.js';
-
-export {
-  createTeacher,
-  deleteTeacher,
-  findTeacherById
-};
+export { createTeacher } from './createTeacher.js';
+export { deleteTeacher } from './deleteTeacher.js';
+export { findTeacherById } from './findTeacherById.js';

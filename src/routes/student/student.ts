@@ -1,16 +1,8 @@
 import { z } from 'zod';
+import { CreateStudentBody, CreateStudentReply } from './student.schema.js';
 import { createStudent } from '#/services/student/index.js';
 import { CustomError } from '#/utils/CustomError.js';
 import type { FastifyZodInstance } from '#/server.js';
-
-const CreateStudentBody = z.object({
-  id: z.uuidv4(),
-  teacherId: z.uuidv4(),
-}).strict();
-
-const CreateStudentReply = z.object({
-  id: z.uuidv4(),
-});
 
 export async function studentRoutes (app: FastifyZodInstance) {
   app.post('/create', {

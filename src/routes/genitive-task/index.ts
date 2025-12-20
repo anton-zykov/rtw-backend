@@ -1,9 +1,3 @@
-import { genitiveTaskExerciseRoutes } from './exercise.js';
-import { genitiveTaskPoolRoutes } from './pool.js';
-import { genitiveTaskStudentRoutes } from './student.js';
-
-export {
-  genitiveTaskExerciseRoutes,
-  genitiveTaskPoolRoutes,
-  genitiveTaskStudentRoutes
-};
+export { genitiveTaskExerciseRoutes } from './exercise.js';
+export { genitiveTaskPoolRoutes } from './pool.js';
+export { genitiveTaskStudentRoutes } from './student.js';

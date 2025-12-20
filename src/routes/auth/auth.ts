@@ -1,19 +1,10 @@
 import { z } from 'zod';
 import bcrypt from 'bcrypt';
+import { LoginBody, MeReply } from './auth.schema.js';
 import { findAdminById } from '#/services/admin/index.js';
 import { findStudentById } from '#/services/student/index.js';
 import { findUserById, findUserByLogin } from '#/services/user/index.js';
 import type { FastifyZodInstance } from '#/server.js';
-
-const LoginBody = z.object({
-  login: z.string(),
-  password: z.string(),
-}).strict();
-
-const MeReply = z.object({
-  id: z.uuidv4(),
-  login: z.string()
-}).strict();
 
 export async function authRoutes (app: FastifyZodInstance) {
   app.post('/login', {

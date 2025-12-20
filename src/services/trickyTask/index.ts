@@ -1,5 +1,1 @@
-import { createTrickyTasks } from './createTrickyTasks.js';
-
-export {
-  createTrickyTasks
-};
+export { createTrickyTasks } from './createTrickyTasks.js';

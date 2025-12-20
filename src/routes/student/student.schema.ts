@@ -1,0 +1,10 @@
+import { z } from 'zod';
+
+export const CreateStudentBody = z.object({
+  id: z.uuidv4(),
+  teacherId: z.uuidv4(),
+}).strict();
+
+export const CreateStudentReply = z.object({
+  id: z.uuidv4(),
+});

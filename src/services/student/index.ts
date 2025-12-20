@@ -1,7 +1,2 @@
-import { createStudent } from './createStudent.js';
-import { findStudentById } from './findStudentById.js';
-
-export {
-  createStudent,
-  findStudentById
-};
+export { createStudent } from './createStudent.js';
+export { findStudentById } from './findStudentById.js';

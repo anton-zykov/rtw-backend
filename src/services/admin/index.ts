@@ -1,7 +1,2 @@
-import { createAdmin } from './createAdmin.js';
-import { findAdminById } from './findAdminById.js';
-
-export {
-  createAdmin,
-  findAdminById
-};
+export { createAdmin } from './createAdmin.js';
+export { findAdminById } from './findAdminById.js';

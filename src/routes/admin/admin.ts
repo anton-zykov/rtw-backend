@@ -1,15 +1,8 @@
 import { z } from 'zod';
+import { CreateAdminBody, CreateAdminReply } from './admin.schema.js';
 import { createAdmin } from '#/services/admin/index.js';
 import { CustomError } from '#/utils/CustomError.js';
 import type { FastifyZodInstance } from '#/server.js';
-
-const CreateAdminBody = z.object({
-  id: z.uuidv4(),
-}).strict();
-
-const CreateAdminReply = z.object({
-  id: z.uuidv4(),
-});
 
 export async function adminRoutes (app: FastifyZodInstance) {
   app.post('/create', {

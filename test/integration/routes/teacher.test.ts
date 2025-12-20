@@ -2,7 +2,7 @@ import { loginSuperAdminAndGetCookie } from 'test/helpers/auth.js';
 import { buildTestServer } from 'test/helpers/buildTestServer.js';
 import { prismaClient } from 'test/helpers/prismaClient.js';
 import { createRedisMock } from 'test/helpers/createRedisMock.js';
-import { createTestUser, createTeacher } from 'test/hooks/index.js';
+import { createUser, createTeacher } from 'test/hooks/index.js';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 
 describe('/teacher', () => {
@@ -18,7 +18,7 @@ describe('/teacher', () => {
   describe('/create', () => {
     describe('when valid id of a user without a role', async () => {
       it('then should create teacher', async () => {
-        const user = await createTestUser(app, adminCookie);
+        const user = await createUser(app, adminCookie);
 
         const res = await app.inject({
           method: 'POST',
@@ -100,7 +100,7 @@ describe('/teacher', () => {
 
     describe('when user is already someone else', async () => {
       it('then should return 409 with proper message', async () => {
-        const user = await createTestUser(app, adminCookie);
+        const user = await createUser(app, adminCookie);
 
         await app.inject({
           method: 'POST',
@@ -131,7 +131,7 @@ describe('/teacher', () => {
 
     describe('when user is already a teacher', async () => {
       it('then should return 409 with proper message', async () => {
-        const user = await createTestUser(app, adminCookie);
+        const user = await createUser(app, adminCookie);
         await createTeacher(app, adminCookie, user.id);
 
         const res = await app.inject({
@@ -154,7 +154,7 @@ describe('/teacher', () => {
   describe('/delete', () => {
     describe('when valid id of a teacher', async () => {
       it('then should delete teacher', async () => {
-        const user = await createTestUser(app, adminCookie);
+        const user = await createUser(app, adminCookie);
         await createTeacher(app, adminCookie, user.id);
 
         const res = await app.inject({

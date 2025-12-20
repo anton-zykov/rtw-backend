@@ -1,7 +1,2 @@
-import { createTeacher } from './createTeacher.js';
-import { createTestUser } from './createTestUser.js';
-
-export {
-  createTeacher,
-  createTestUser
-};
+export { createTeacher } from './createTeacher.js';
+export { createUser } from './createUser.js';
