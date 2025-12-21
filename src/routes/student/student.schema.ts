@@ -8,3 +8,7 @@ export const CreateStudentBody = z.object({
 export const CreateStudentReply = z.object({
   id: z.uuidv4(),
 });
+
+export const DeleteStudentBody = z.object({
+  id: z.uuidv4(),
+});

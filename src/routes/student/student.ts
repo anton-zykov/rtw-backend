@@ -1,6 +1,6 @@
 import { z } from 'zod';
-import { CreateStudentBody, CreateStudentReply } from './student.schema.js';
-import { createStudent } from '#/services/student/index.js';
+import { CreateStudentBody, CreateStudentReply, DeleteStudentBody } from './student.schema.js';
+import { createStudent, deleteStudent } from '#/services/student/index.js';
 import { CustomError } from '#/utils/CustomError.js';
 import type { FastifyZodInstance } from '#/server.js';
 
@@ -25,5 +25,18 @@ export async function studentRoutes (app: FastifyZodInstance) {
           .send({ message: error.message });
       } else throw error;
     }
+  });
+
+  app.delete('/delete', {
+    preHandler: app.canModifyStudent,
+    schema: {
+      body: DeleteStudentBody,
+      response: {
+        200: z.void(),
+      },
+    },
+  }, async (req, reply) => {
+    await deleteStudent(app.prisma, req.body);
+    return reply.status(200).send();
   });
 }
