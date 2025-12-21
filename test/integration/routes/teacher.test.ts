@@ -50,7 +50,7 @@ describe('/teacher', () => {
         });
 
         expect(resNoId.statusCode).toBe(400);
-        expect(resNoId.json()).toMatchObject({ message: 'body/id User id is required' });
+        expect(resNoId.json()).toMatchObject({ message: 'Request validation failed' });
 
         const resNoPayload = await app.inject({
           method: 'POST',
@@ -62,7 +62,7 @@ describe('/teacher', () => {
         });
 
         expect(resNoPayload.statusCode).toBe(400);
-        expect(resNoPayload.json()).toMatchObject({ message: 'body/id User id is required' });
+        expect(resNoPayload.json()).toMatchObject({ message: 'Request validation failed' });
 
         const resInvalidType = await app.inject({
           method: 'POST',
@@ -76,7 +76,7 @@ describe('/teacher', () => {
         });
 
         expect(resInvalidType.statusCode).toBe(400);
-        expect(resInvalidType.json()).toMatchObject({ message: 'body/id User id is required' });
+        expect(resInvalidType.json()).toMatchObject({ message: 'Request validation failed' });
       });
     });
 

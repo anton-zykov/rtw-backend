@@ -1,4 +1,4 @@
-import { CustomError } from '#/utils/CustomError.js';
+import { AppError } from '#/utils/AppError.js';
 import type { PrismaClient } from '@prisma/client';
 
 export async function deleteTeacher (
@@ -12,7 +12,7 @@ export async function deleteTeacher (
       id: input.id,
     }
   });
-  if (!user) throw new CustomError('Teacher not found', 404);
+  if (!user) throw new AppError('USER_NOT_FOUND', 'Teacher not found');
 
   await prisma.teacher.delete({
     where: {

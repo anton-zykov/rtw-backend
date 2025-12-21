@@ -1,4 +1,4 @@
-import { CustomError } from '#/utils/CustomError.js';
+import { AppError } from '#/utils/AppError.js';
 import type { PrismaClient, Teacher } from '@prisma/client';
 
 export async function createTeacher (
@@ -17,9 +17,9 @@ export async function createTeacher (
       student: true
     }
   });
-  if (!user) throw new CustomError('User not found', 404);
-  if (user.admin || user.student) throw new CustomError('The user already has other role', 409);
-  if (user.teacher) throw new CustomError('The user is already teacher', 409);
+  if (!user) throw new AppError('USER_NOT_FOUND', 'User not found');
+  if (user.admin || user.student) throw new AppError('CONFLICT', 'The user already has other role');
+  if (user.teacher) throw new AppError('CONFLICT', 'The user is already teacher');
 
   const teacher = await prisma.teacher.create({
     data: input,

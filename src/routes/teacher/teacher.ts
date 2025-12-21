@@ -1,7 +1,7 @@
 import { z } from 'zod';
 import { CreateTeacherBody, CreateTeacherReply, DeleteTeacherBody } from './teacher.schema.js';
 import { createTeacher, deleteTeacher } from '#/services/teacher/index.js';
-import { CustomError } from '#/utils/CustomError.js';
+import { AppErrorSchema } from '#/utils/AppError.js';
 import type { FastifyZodInstance } from '#/server.js';
 
 export async function teacherRoutes (app: FastifyZodInstance) {
@@ -11,21 +11,14 @@ export async function teacherRoutes (app: FastifyZodInstance) {
       body: CreateTeacherBody,
       response: {
         201: CreateTeacherReply,
-        400: z.object({ message: z.string() }),
-        404: z.object({ message: z.string() }),
-        409: z.object({ message: z.string() }),
+        400: AppErrorSchema,
+        404: AppErrorSchema,
+        409: AppErrorSchema,
       },
     },
   }, async (req, reply) => {
-    try {
-      const teacher = await createTeacher(app.prisma, req.body);
-      reply.status(201).send(teacher);
-    } catch (error) {
-      if (error instanceof CustomError) {
-        reply.status((error.status === 404 || error.status === 409) ? error.status : 400)
-          .send({ message: error.message });
-      } else throw error;
-    }
+    const teacher = await createTeacher(app.prisma, req.body);
+    return reply.status(201).send(teacher);
   });
 
   app.delete('/delete', {
@@ -34,19 +27,12 @@ export async function teacherRoutes (app: FastifyZodInstance) {
       body: DeleteTeacherBody,
       response: {
         200: z.void(),
-        400: z.object({ message: z.string() }),
-        404: z.object({ message: z.string() }),
+        400: AppErrorSchema,
+        404: AppErrorSchema,
       }
     }
   }, async (req, reply) => {
-    try {
-      await deleteTeacher(app.prisma, req.body);
-      reply.status(200).send();
-    } catch (error) {
-      if (error instanceof CustomError) {
-        reply.status((error.status === 404) ? error.status : 400)
-          .send({ message: error.message });
-      } else throw error;
-    }
+    await deleteTeacher(app.prisma, req.body);
+    return reply.status(200).send();
   });
 }

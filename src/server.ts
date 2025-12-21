@@ -7,11 +7,12 @@ import fastify, {
   type RawServerDefault,
 } from 'fastify';
 import { fastifyCookie } from '@fastify/cookie';
+import { authGuardPlugin } from '#/plugins/auth-guards.js';
+import { errorHandlerPlugin } from './plugins/errorHandler.js';
 import type { PrismaPluginOptions } from '#/plugins/prisma.js';
 import type { RedisPluginOptions } from '#/plugins/redis.js';
 import type { TelegramPluginOptions } from '#/plugins/telegram.js';
 import { sessionPlugin, type SessionPluginOptions } from '#/plugins/session.js';
-import { authGuardPlugin } from '#/plugins/auth-guards.js';
 import {
   type ZodTypeProvider,
   validatorCompiler,
@@ -66,6 +67,7 @@ export function buildServer (deps: BuildDeps): FastifyZodInstance {
   app.setValidatorCompiler(validatorCompiler);
   app.setSerializerCompiler(serializerCompiler);
   app.register(fastifyCookie, { secret: deps.config.cookie.secret });
+  app.register(errorHandlerPlugin);
   app.register(deps.prismaPlugin, { prismaClient: deps.config.prisma.prismaClient });
   app.register(deps.redisPlugin, { redisClient: deps.config.redis.redisClient });
   app.register(deps.telegramPlugin, { token: deps.config.telegram.token });
