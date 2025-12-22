@@ -1,5 +1,6 @@
 import fp from 'fastify-plugin';
 import { findStudentById } from '#/services/student/index.js';
+import { AppError } from '#/utils/AppError.js';
 
 declare module 'fastify' {
   interface FastifyInstance {
@@ -21,14 +22,14 @@ export const authGuardPlugin = fp(async (app) => {
   app.decorateReply(
     'forbidden',
     async function forbidden () {
-      return this.code(403).send({ message: 'Forbidden' });
+      throw new AppError('FORBIDDEN', 'Forbidden');
     }
   );
 
   app.decorateReply(
     'unauthorized',
     async function unauthorized () {
-      return this.code(401).send({ message: 'Unauthorized' });
+      throw new AppError('UNAUTHORIZED', 'Unauthorized');
     }
   );
 

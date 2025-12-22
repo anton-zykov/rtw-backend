@@ -1,5 +1,6 @@
 import bcrypt from 'bcrypt';
-import type { PrismaClient, User } from '@prisma/client';
+import { AppError } from '#/utils/AppError.js';
+import { Prisma, type PrismaClient, type User } from '@prisma/client';
 
 export async function createUser (
   prisma: PrismaClient,
@@ -12,16 +13,23 @@ export async function createUser (
   }
 ): Promise<User> {
   const passwordHash = await bcrypt.hash(input.password, 10);
-  const user = await prisma.user.create({
-    data: {
-      login: input.login,
-      passwordHash,
-      passwordVersion: 1,
-      fullName: input.fullName,
-      email: input.email,
-      telegramId: input.telegramId
-    },
-  });
+  let user: User;
+  try {
+    user = await prisma.user.create({
+      data: {
+        login: input.login,
+        passwordHash,
+        passwordVersion: 1,
+        fullName: input.fullName,
+        email: input.email,
+        telegramId: input.telegramId
+      },
+    });
+  } catch (err) {
+    if (err instanceof Prisma.PrismaClientKnownRequestError && err.code === 'P2002') {
+      throw new AppError('CONFLICT', 'User already exists');
+    } else throw err;
+  }
 
   return user;
 }
