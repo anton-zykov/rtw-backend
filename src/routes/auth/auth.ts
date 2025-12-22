@@ -4,6 +4,7 @@ import { LoginBody, MeReply } from './auth.schema.js';
 import { findAdminById } from '#/services/admin/index.js';
 import { findStudentById } from '#/services/student/index.js';
 import { findUserById, findUserByLogin } from '#/services/user/index.js';
+import { AppError, AppErrorSchema } from '#/utils/AppError.js';
 import type { FastifyZodInstance } from '#/server.js';
 
 export async function authRoutes (app: FastifyZodInstance) {
@@ -12,26 +13,20 @@ export async function authRoutes (app: FastifyZodInstance) {
       body: LoginBody,
       response: {
         200: z.void(),
-        400: z.object({ message: z.string() }),
-        401: z.object({ message: z.string() }),
-        404: z.object({ message: z.string() })
+        default: AppErrorSchema
       },
     }
   }, async (req, reply) => {
     const parsed = LoginBody.safeParse(req.body);
-    if (!parsed.success) {
-      return reply.code(400).send({ message: 'Invalid body' });
-    }
+    if (!parsed.success) throw new AppError('VALIDATION', 'Invalid body');
+
     const { login, password } = parsed.data;
     const user = await findUserByLogin(app.prisma, { login });
-    if (!user) {
-      return reply.code(401).send({ message: 'Invalid credentials' });
-    }
+    if (!user) throw new AppError('UNAUTHORIZED', 'Invalid credentials');
+    if (!user.active) throw new AppError('FORBIDDEN', 'User is disabled');
 
     const ok = await bcrypt.compare(password, user.passwordHash);
-    if (!ok) {
-      return reply.code(401).send({ message: 'Invalid credentials' });
-    }
+    if (!ok) throw new AppError('UNAUTHORIZED', 'Invalid credentials');
 
     req.session.userId = user.id;
 
@@ -46,6 +41,7 @@ export async function authRoutes (app: FastifyZodInstance) {
     schema: {
       response: {
         200: z.void(),
+        default: AppErrorSchema
       },
     }
   }, async (req, reply) => {
@@ -58,20 +54,12 @@ export async function authRoutes (app: FastifyZodInstance) {
     schema: {
       response: {
         200: MeReply,
-        401: z.object({ message: z.string() }),
+        default: AppErrorSchema,
       },
     }
   }, async (req, reply) => {
-    if (!req.session.userId) {
-      return reply.code(401).send({ message: 'Not logged in' });
-    }
-
     const user = await findUserById(app.prisma, { id: req.session.userId });
-
-    if (!user) {
-      return reply.code(401).send({ message: 'User not found' });
-    }
-
-    return reply.send(user);
+    if (!user) throw new AppError('USER_NOT_FOUND', 'User not found');
+    return reply.status(200).send(user);
   });
 }
