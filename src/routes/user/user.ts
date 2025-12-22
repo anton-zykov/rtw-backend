@@ -17,7 +17,7 @@ export async function userRoutes (app: FastifyZodInstance) {
   });
 
   app.patch('/update', {
-    preHandler: app.requireAdmin, // TODO: allow student to update his own data
+    preHandler: app.requireAdmin,
     schema: {
       body: UpdateUserBody,
       response: {
@@ -26,6 +26,32 @@ export async function userRoutes (app: FastifyZodInstance) {
     },
   }, async (req, reply) => {
     const user = await updateUser(app.prisma, req.body);
-    reply.status(200).send(user);
+    return reply.status(200).send(user);
+  });
+
+  app.patch('/update-student', {
+    preHandler: app.canModifyStudent,
+    schema: {
+      body: UpdateUserBody,
+      response: {
+        200: UpdateUserReply,
+      },
+    }
+  }, async (req, reply) => {
+    const user = await updateUser(app.prisma, req.body);
+    return reply.status(200).send(user);
+  });
+
+  app.patch('/update-self', {
+    preHandler: app.requireOwner,
+    schema: {
+      body: UpdateUserBody,
+      response: {
+        200: UpdateUserReply,
+      },
+    },
+  }, async (req, reply) => {
+    const user = await updateUser(app.prisma, req.body);
+    return reply.status(200).send(user);
   });
 }

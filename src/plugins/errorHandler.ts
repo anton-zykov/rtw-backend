@@ -1,4 +1,3 @@
-// error-handler.plugin.ts
 import fp from 'fastify-plugin';
 import { AppError, type AppErrorCode } from '#/utils/AppError.js';
 

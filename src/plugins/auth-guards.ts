@@ -8,7 +8,7 @@ declare module 'fastify' {
     requireStudent: (req: FastifyRequest, reply: FastifyReply) => Promise<void>;
     requireTeacher: (req: FastifyRequest, reply: FastifyReply) => Promise<void>;
     canModifyStudent: (req: FastifyRequest, reply: FastifyReply) => Promise<void>;
-    requireOwnerStudent: (req: FastifyRequest, reply: FastifyReply) => Promise<void>;
+    requireOwner: (req: FastifyRequest, reply: FastifyReply) => Promise<void>;
   }
 
   interface FastifyReply {
@@ -76,12 +76,10 @@ export const authGuardPlugin = fp(async (app) => {
   );
 
   app.decorate(
-    'requireOwnerStudent',
-    async function requireOwnerStudent (req, reply) {
+    'requireOwner',
+    async function requireOwner (req, reply) {
       if (!req.session.userId) return reply.unauthorized();
-      if (req.session.role !== 'student' || req.session.userId !== (req.body as { studentId?: string }).studentId) {
-        return reply.forbidden();
-      }
+      if (req.session.userId !== (req.body as { id?: string }).id) return reply.forbidden();
     }
   );
 });
