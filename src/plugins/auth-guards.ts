@@ -8,7 +8,7 @@ declare module 'fastify' {
     requireAdmin: (req: FastifyRequest, reply: FastifyReply) => Promise<void>;
     requireStudent: (req: FastifyRequest, reply: FastifyReply) => Promise<void>;
     requireTeacher: (req: FastifyRequest, reply: FastifyReply) => Promise<void>;
-    canModifyStudent: (req: FastifyRequest, reply: FastifyReply) => Promise<void>;
+    requireOwnTeacherOrAdmin: (req: FastifyRequest, reply: FastifyReply) => Promise<void>;
     requireOwner: (req: FastifyRequest, reply: FastifyReply) => Promise<void>;
   }
 
@@ -65,8 +65,8 @@ export const authGuardPlugin = fp(async (app) => {
   );
 
   app.decorate(
-    'canModifyStudent',
-    async function canModifyStudent (req, reply) {
+    'requireOwnTeacherOrAdmin',
+    async function requireOwnTeacherOrAdmin (req, reply) {
       if (!req.session.userId) return reply.unauthorized();
       if (req.session.role === 'admin') return;
       if (req.session.role !== 'teacher') return reply.forbidden();
