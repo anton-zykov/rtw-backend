@@ -1,4 +1,5 @@
 export { createUser } from './createUser.js';
+export { deleteUser } from './deleteUser.js';
 export { disableUser } from './disableUser.js';
 export { enableUser } from './enableUser.js';
 export { findUserById } from './findUserById.js';

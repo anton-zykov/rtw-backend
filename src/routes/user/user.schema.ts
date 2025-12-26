@@ -69,3 +69,7 @@ export const EnableUserBody = z.object({
 export const EnableStudentUserBody = z.object({
   studentId: z.uuidv4(),
 }).strict();
+
+export const DeleteUserBody = z.object({
+  id: z.uuidv4(),
+}).strict();

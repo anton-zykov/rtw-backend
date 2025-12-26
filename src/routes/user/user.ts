@@ -9,9 +9,10 @@ import {
   DisableUserBody,
   DisableStudentUserBody,
   EnableUserBody,
-  EnableStudentUserBody
+  EnableStudentUserBody,
+  DeleteUserBody
 } from './user.schema.js';
-import { createUser, disableUser, enableUser, updateUser } from '#/services/user/index.js';
+import { createUser, deleteUser, disableUser, enableUser, updateUser } from '#/services/user/index.js';
 import { AppErrorSchema } from '#/utils/AppError.js';
 import type { FastifyZodInstance } from '#/server.js';
 
@@ -125,6 +126,20 @@ export async function userRoutes (app: FastifyZodInstance) {
     },
   }, async (req, reply) => {
     await enableUser(app.prisma, { id: req.body.studentId });
+    return reply.status(200).send();
+  });
+
+  app.delete('/delete', {
+    preHandler: app.requireAdmin,
+    schema: {
+      body: DeleteUserBody,
+      response: {
+        200: z.void(),
+        default: AppErrorSchema
+      }
+    }
+  }, async (req, reply) => {
+    await deleteUser(app.prisma, req.body);
     return reply.status(200).send();
   });
 }
