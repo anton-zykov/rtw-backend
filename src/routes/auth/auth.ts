@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import bcrypt from 'bcrypt';
-import { LoginBody, MeReply } from './auth.schema.js';
+import { LoginBody, LoginReply, MeReply } from './auth.schema.js';
 import { findAdminById } from '#/services/admin/index.js';
 import { findStudentById } from '#/services/student/index.js';
 import { findUserById, findUserByLogin } from '#/services/user/index.js';
@@ -12,7 +12,7 @@ export async function authRoutes (app: FastifyZodInstance) {
     schema: {
       body: LoginBody,
       response: {
-        200: z.void(),
+        200: LoginReply,
         default: AppErrorSchema
       },
     }
@@ -34,7 +34,9 @@ export async function authRoutes (app: FastifyZodInstance) {
     else if (await findAdminById(app.prisma, { id: user.id }) !== null) req.session.role = 'admin';
     else req.session.role = 'not-set';
 
-    return reply.status(200).send();
+    return reply.status(200).send({
+      role: req.session.role
+    });
   });
 
   app.post('/logout', {

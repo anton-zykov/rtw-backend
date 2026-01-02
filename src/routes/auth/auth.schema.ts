@@ -5,6 +5,10 @@ export const LoginBody = z.object({
   password: z.string(),
 }).strict();
 
+export const LoginReply = z.object({
+  role: z.string(),
+}).strict();
+
 export const MeReply = z.object({
   id: z.uuidv4(),
   login: z.string()
