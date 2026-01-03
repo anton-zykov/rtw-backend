@@ -13,6 +13,7 @@ import type { PrismaPluginOptions } from '#/plugins/prisma.js';
 import type { RedisPluginOptions } from '#/plugins/redis.js';
 import type { TelegramPluginOptions } from '#/plugins/telegram.js';
 import { sessionPlugin, type SessionPluginOptions } from '#/plugins/session.js';
+import cors from '@fastify/cors';
 import {
   type ZodTypeProvider,
   validatorCompiler,
@@ -53,6 +54,7 @@ type BuildDeps = {
   telegramPlugin: FastifyPluginAsync<TelegramPluginOptions>;
   config: {
     logger: boolean;
+    https: { key: Buffer; cert: Buffer } | null;
     cookie: FastifyCookieOptions;
     session: SessionPluginOptions;
     prisma: PrismaPluginOptions;
@@ -62,7 +64,13 @@ type BuildDeps = {
 };
 
 export function buildServer (deps: BuildDeps): FastifyZodInstance {
-  const app = fastify({ logger: deps.config.logger });
+  const app = fastify({
+    logger: deps.config.logger,
+    https: deps.config.https && {
+      key: deps.config.https.key,
+      cert: deps.config.https.cert,
+    },
+  });
 
   app.setValidatorCompiler(validatorCompiler);
   app.setSerializerCompiler(serializerCompiler);
@@ -73,6 +81,10 @@ export function buildServer (deps: BuildDeps): FastifyZodInstance {
   app.register(deps.telegramPlugin, { token: deps.config.telegram.token });
   app.register(sessionPlugin, { secret: deps.config.session.secret, store: deps.config.session.store });
   app.register(authGuardPlugin);
+  app.register(cors, {
+    origin: 'https://127.0.0.1:5173',
+    credentials: true,
+  });
 
   app.register(adminRoutes, { prefix: '/api/admin' });
   app.register(authRoutes, { prefix: '/api/auth' });

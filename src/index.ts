@@ -1,4 +1,5 @@
 import 'dotenv/config';
+import fs from 'fs';
 import { buildServer } from '#/server.js';
 import { prismaPlugin } from '#/plugins/prisma.js';
 import { redisPlugin } from '#/plugins/redis.js';
@@ -25,6 +26,12 @@ const app = buildServer({
   telegramPlugin,
   config: {
     logger: true,
+    https: process.env['HTTPS'] === 'true'
+      ? {
+          key: fs.readFileSync(process.env['HTTPS_KEY'] ?? ''),
+          cert: fs.readFileSync(process.env['HTTPS_CERT'] ?? ''),
+        }
+      : null,
     cookie: {
       secret: process.env['COOKIE_SECRET'],
     },

@@ -70,7 +70,7 @@ export type SessionPluginOptions = {
 
 export const sessionPlugin: FastifyPluginAsync<SessionPluginOptions> = fp(
   async (app: FastifyInstance, opts: SessionPluginOptions) => {
-    const MS_TO_EXPIRE = 60 * 1000;
+    const MS_TO_EXPIRE = 160 * 1000;
 
     await app.register(fastifySession, {
       secret: opts.secret,
@@ -81,7 +81,7 @@ export const sessionPlugin: FastifyPluginAsync<SessionPluginOptions> = fp(
       cookie: {
         httpOnly: true,
         secure: 'auto',
-        sameSite: 'lax',
+        sameSite: 'none',
         path: '/',
         maxAge: MS_TO_EXPIRE,
       },
