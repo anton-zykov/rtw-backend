@@ -16,12 +16,12 @@ model User {
 
 model Admin {
   id   String  @unique @db.Uuid
-  user User    @relation(fields: [id], references: [id])
+  user User    @relation(fields: [id], references: [id], onDelete: Cascade)
 }
 
 model Student {
   id            String                @unique @db.Uuid
-  user          User                  @relation(fields: [id], references: [id])
+  user          User                  @relation(fields: [id], references: [id], onDelete: Cascade)
   teacherId     String                @db.Uuid
   teacher       Teacher               @relation(fields: [teacherId], references: [id])
   genitiveTasks StudentGenitiveTask[]
@@ -31,6 +31,6 @@ model Student {
 
 model Teacher {
   id       String    @unique @db.Uuid
-  user     User      @relation(fields: [id], references: [id])
+  user     User      @relation(fields: [id], references: [id], onDelete: Cascade)
   students Student[]
 }
