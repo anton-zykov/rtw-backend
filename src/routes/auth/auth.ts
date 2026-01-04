@@ -3,6 +3,7 @@ import bcrypt from 'bcrypt';
 import { LoginBody, LoginReply, MeReply } from './auth.schema.js';
 import { findAdminById } from '#/services/admin/index.js';
 import { findStudentById } from '#/services/student/index.js';
+import { findTeacherById } from '#/services/teacher/findTeacherById.js';
 import { findUserById, findUserByLogin } from '#/services/user/index.js';
 import { AppError, AppErrorSchema } from '#/utils/AppError.js';
 import type { FastifyZodInstance } from '#/server.js';
@@ -32,6 +33,7 @@ export async function authRoutes (app: FastifyZodInstance) {
 
     if (await findStudentById(app.prisma, { id: user.id }) !== null) req.session.role = 'student';
     else if (await findAdminById(app.prisma, { id: user.id }) !== null) req.session.role = 'admin';
+    else if (await findTeacherById(app.prisma, { id: user.id }) !== null) req.session.role = 'teacher';
     else req.session.role = 'not-set';
 
     return reply.status(200).send({

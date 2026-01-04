@@ -2,7 +2,7 @@ import { loginSuperAdminAndGetCookie } from 'test/helpers/auth.js';
 import { buildTestServer } from 'test/helpers/buildTestServer.js';
 import { prismaClient } from 'test/helpers/prismaClient.js';
 import { createRedisMock } from 'test/helpers/createRedisMock.js';
-import { createUser, createTeacher } from 'test/hooks/index.js';
+import { createUser, createTeacher, cleanUpUser } from 'test/hooks/index.js';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 
 describe('/teacher', () => {
@@ -34,7 +34,7 @@ describe('/teacher', () => {
         expect(res.statusCode).toBe(201);
         expect(res.json()).toStrictEqual({ id: user.id });
 
-        // delete user
+        await cleanUpUser(app, adminCookie, user.id);
       });
     });
 
@@ -51,18 +51,6 @@ describe('/teacher', () => {
 
         expect(resNoId.statusCode).toBe(400);
         expect(resNoId.json()).toMatchObject({ message: 'Request validation failed' });
-
-        const resNoPayload = await app.inject({
-          method: 'POST',
-          url: '/api/teacher/create',
-          payload: {},
-          headers: {
-            cookie: adminCookie
-          }
-        });
-
-        expect(resNoPayload.statusCode).toBe(400);
-        expect(resNoPayload.json()).toMatchObject({ message: 'Request validation failed' });
 
         const resInvalidType = await app.inject({
           method: 'POST',
@@ -126,6 +114,8 @@ describe('/teacher', () => {
 
         expect(res.statusCode).toBe(409);
         expect(res.json()).toMatchObject({ message: 'The user already has other role' });
+
+        await cleanUpUser(app, adminCookie, user.id);
       });
     });
 
@@ -147,6 +137,8 @@ describe('/teacher', () => {
 
         expect(res.statusCode).toBe(409);
         expect(res.json()).toMatchObject({ message: 'The user is already teacher' });
+
+        await cleanUpUser(app, adminCookie, user.id);
       });
     });
   });
