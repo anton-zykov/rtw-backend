@@ -11,5 +11,6 @@ export const LoginReply = z.object({
 
 export const MeReply = z.object({
   id: z.uuidv4(),
-  login: z.string()
+  login: z.string(),
+  role: z.string(),
 }).strict();

@@ -2,11 +2,12 @@ import fp from 'fastify-plugin';
 import { fastifySession, type SessionStore } from '@fastify/session';
 import type { FastifyInstance, FastifyPluginAsync, Session } from 'fastify';
 import type { RedisClientType } from 'redis';
+import type { Role } from '#/utils/types.js';
 
 declare module 'fastify' {
   interface Session {
     userId: string;
-    role: 'admin' | 'student' | 'teacher' | 'not-set';
+    role: Role;
   }
 }
 

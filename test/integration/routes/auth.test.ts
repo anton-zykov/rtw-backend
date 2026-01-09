@@ -122,7 +122,7 @@ describe('/auth', () => {
     });
 
     describe('when there is logged in user with no role', async () => {
-      it.todo('then should return user\'s id, login and role===not-set', async () => {});
+      it.todo('then should return user\'s id, login and role===not_set', async () => {});
     });
 
     describe('when there is logged in admin', async () => {

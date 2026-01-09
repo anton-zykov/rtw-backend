@@ -3,6 +3,7 @@ BEGIN;
 
 TRUNCATE TABLE
   "User",
+  "Teacher",
   "Student",
   "Admin",
   "GenitiveTask",
@@ -13,10 +14,11 @@ TRUNCATE TABLE
   "StudentTrickyTask"
 RESTART IDENTITY CASCADE;
 
-INSERT INTO "User" (id, login, "passwordHash") VALUES
-  ('d6ff850c-5e8c-466d-95d9-03be8d383534', 'Admin', '$2a$10$LzcYoDDAutsZ.mlE5IPh7uzHQS4zHjJojormjB66dpbBABhCaBcR2'),
-  ('13c88df2-b3de-4de5-a476-31985427a5a6', 'Teacher', '$2a$10$LzcYoDDAutsZ.mlE5IPh7uzHQS4zHjJojormjB66dpbBABhCaBcR2'),
-  ('b53b7776-3a9e-4cfb-9dbc-1a24af5234df', 'Bob', '$2a$10$LzcYoDDAutsZ.mlE5IPh7uzHQS4zHjJojormjB66dpbBABhCaBcR2');
+INSERT INTO "User" (id, login, "passwordHash", "role") VALUES
+  ('d6ff850c-5e8c-466d-95d9-03be8d383534', 'Admin', '$2a$10$LzcYoDDAutsZ.mlE5IPh7uzHQS4zHjJojormjB66dpbBABhCaBcR2', 'admin'),
+  ('13c88df2-b3de-4de5-a476-31985427a5a6', 'Teacher', '$2a$10$LzcYoDDAutsZ.mlE5IPh7uzHQS4zHjJojormjB66dpbBABhCaBcR2', 'teacher'),
+  ('b53b7776-3a9e-4cfb-9dbc-1a24af5234df', 'Student', '$2a$10$LzcYoDDAutsZ.mlE5IPh7uzHQS4zHjJojormjB66dpbBABhCaBcR2', 'student'),
+  ('2fc7bbd0-1619-42fb-b84a-67fe43c87b41', 'User', '$2a$10$LzcYoDDAutsZ.mlE5IPh7uzHQS4zHjJojormjB66dpbBABhCaBcR2', 'not_set');
 
 INSERT INTO "Admin" (id) VALUES ('d6ff850c-5e8c-466d-95d9-03be8d383534');
 INSERT INTO "Teacher" (id) VALUES ('13c88df2-b3de-4de5-a476-31985427a5a6');
