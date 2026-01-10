@@ -27,11 +27,18 @@ model Admin {
   user User    @relation(fields: [id], references: [id], onDelete: Cascade)
 }
 
+enum TaskType {
+  genitive
+  stress
+  tricky
+}
+
 model Student {
   id            String                @unique @db.Uuid
   user          User                  @relation(fields: [id], references: [id], onDelete: Cascade)
   teacherId     String                @db.Uuid
   teacher       Teacher               @relation(fields: [teacherId], references: [id])
+  taskTypes     TaskType[]            @default([])
   genitiveTasks StudentGenitiveTask[]
   stressTasks   StudentStressTask[]
   trickyTasks   StudentTrickyTask[]

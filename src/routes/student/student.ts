@@ -1,7 +1,8 @@
 import { z } from 'zod';
-import { CreateStudentBody, CreateStudentReply, DeleteStudentBody } from './student.schema.js';
-import { createStudent, deleteStudent } from '#/services/student/index.js';
+import { CreateStudentBody, CreateStudentReply, DeleteStudentBody, GetTaskTypesParams, GetTaskTypesReply } from './student.schema.js';
+import { createStudent, deleteStudent, findStudentById } from '#/services/student/index.js';
 import { CustomError } from '#/utils/CustomError.js';
+import { AppErrorSchema } from '#/utils/AppError.js';
 import type { FastifyZodInstance } from '#/server.js';
 
 export async function studentRoutes (app: FastifyZodInstance) {
@@ -28,15 +29,30 @@ export async function studentRoutes (app: FastifyZodInstance) {
   });
 
   app.delete('/delete', {
-    preHandler: app.canModifyStudent,
+    preHandler: app.requireOwnTeacherOrAdmin,
     schema: {
       body: DeleteStudentBody,
       response: {
         200: z.void(),
+        default: AppErrorSchema
       },
     },
   }, async (req, reply) => {
     await deleteStudent(app.prisma, req.body);
     return reply.status(200).send();
+  });
+
+  app.get('/get-task-types/:id', {
+    preHandler: app.requireOwner,
+    schema: {
+      params: GetTaskTypesParams,
+      response: {
+        200: GetTaskTypesReply,
+        default: AppErrorSchema
+      },
+    },
+  }, async (req, reply) => {
+    const student = await findStudentById(app.prisma, { id: req.params.id });
+    return reply.status(200).send({ taskTypes: student.taskTypes });
   });
 }

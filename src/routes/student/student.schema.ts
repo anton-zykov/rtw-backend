@@ -1,3 +1,4 @@
+import { TaskType } from '@prisma/client';
 import { z } from 'zod';
 
 export const CreateStudentBody = z.object({
@@ -12,3 +13,11 @@ export const CreateStudentReply = z.object({
 export const DeleteStudentBody = z.object({
   id: z.uuidv4(),
 });
+
+export const GetTaskTypesReply = z.object({
+  taskTypes: z.array(z.enum(TaskType)),
+}).strict();
+
+export const GetTaskTypesParams = z.object({
+  id: z.uuidv4(),
+}).strict();

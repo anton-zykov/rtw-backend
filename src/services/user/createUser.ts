@@ -28,7 +28,8 @@ export async function createUser (
   } catch (err) {
     if (err instanceof Prisma.PrismaClientKnownRequestError && err.code === 'P2002') {
       throw new AppError('CONFLICT', 'User already exists');
-    } else throw err;
+    }
+    throw err;
   }
 
   return user;

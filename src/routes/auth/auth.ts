@@ -34,7 +34,7 @@ export async function authRoutes (app: FastifyZodInstance) {
     if (await findStudentById(app.prisma, { id: user.id }) !== null) req.session.role = 'student';
     else if (await findAdminById(app.prisma, { id: user.id }) !== null) req.session.role = 'admin';
     else if (await findTeacherById(app.prisma, { id: user.id }) !== null) req.session.role = 'teacher';
-    else req.session.role = 'not-set';
+    else req.session.role = 'not_set';
 
     return reply.status(200).send({
       role: req.session.role
