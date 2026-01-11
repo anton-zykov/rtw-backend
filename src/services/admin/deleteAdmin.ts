@@ -1,20 +1,17 @@
 import { Prisma, type PrismaClient } from '@prisma/client';
 import { AppError } from '#/utils/AppError.js';
 
-export async function disableUser (
+export async function deleteAdmin (
   prisma: PrismaClient,
   input: {
     id: string;
   }
 ): Promise<void> {
   try {
-    await prisma.user.update({
+    await prisma.admin.delete({
       where: {
         id: input.id,
-      },
-      data: {
-        active: false
-      },
+      }
     });
   } catch (err) {
     if (err instanceof Prisma.PrismaClientKnownRequestError && err.code === 'P2025') {

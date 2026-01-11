@@ -1,5 +1,5 @@
+import { Prisma, type PrismaClient } from '@prisma/client';
 import { AppError } from '#/utils/AppError.js';
-import type { PrismaClient } from '@prisma/client';
 
 export async function deleteTeacher (
   prisma: PrismaClient,
@@ -7,16 +7,16 @@ export async function deleteTeacher (
     id: string;
   }
 ): Promise<void> {
-  const user = await prisma.teacher.findUnique({
-    where: {
-      id: input.id,
+  try {
+    await prisma.teacher.delete({
+      where: {
+        id: input.id,
+      }
+    });
+  } catch (err) {
+    if (err instanceof Prisma.PrismaClientKnownRequestError && err.code === 'P2025') {
+      throw new AppError('USER_NOT_FOUND', 'User not found');
     }
-  });
-  if (!user) throw new AppError('USER_NOT_FOUND', 'Teacher not found');
-
-  await prisma.teacher.delete({
-    where: {
-      id: input.id,
-    }
-  });
+    throw err;
+  }
 }

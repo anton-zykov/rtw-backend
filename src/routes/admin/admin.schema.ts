@@ -7,3 +7,7 @@ export const CreateAdminBody = z.object({
 export const CreateAdminReply = z.object({
   id: z.uuidv4(),
 });
+
+export const DeleteAdminBody = z.object({
+  id: z.uuidv4(),
+}).strict();

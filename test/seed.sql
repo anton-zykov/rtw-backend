@@ -2,6 +2,7 @@ BEGIN;
 
 TRUNCATE TABLE
   "User",
+  "Teacher",
   "Student",
   "Admin",
   "GenitiveTask",

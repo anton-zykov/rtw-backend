@@ -1,5 +1,5 @@
-import { CustomError } from '#/utils/CustomError.js';
-import type { PrismaClient } from '@prisma/client';
+import { Prisma, type PrismaClient } from '@prisma/client';
+import { AppError } from '#/utils/AppError.js';
 
 export async function deleteStudent (
   prisma: PrismaClient,
@@ -7,16 +7,16 @@ export async function deleteStudent (
     id: string;
   }
 ): Promise<void> {
-  const user = await prisma.student.findUnique({
-    where: {
-      id: input.id,
+  try {
+    await prisma.student.delete({
+      where: {
+        id: input.id,
+      }
+    });
+  } catch (err) {
+    if (err instanceof Prisma.PrismaClientKnownRequestError && err.code === 'P2025') {
+      throw new AppError('USER_NOT_FOUND', 'User not found');
     }
-  });
-  if (!user) throw new CustomError('Student not found', 404);
-
-  await prisma.student.delete({
-    where: {
-      id: input.id,
-    }
-  });
+    throw err;
+  }
 }

@@ -1,16 +1,22 @@
-import type { PrismaClient, Admin } from '@prisma/client';
+import { Prisma, type PrismaClient, type Admin } from '@prisma/client';
+import { AppError } from '#/utils/AppError.js';
 
 export async function findAdminById (
   prisma: PrismaClient,
   input: {
     id: string;
   }
-): Promise<Admin | null> {
-  const admin = await prisma.admin.findUnique({
-    where: {
-      id: input.id,
+): Promise<Admin> {
+  try {
+    return await prisma.admin.findUniqueOrThrow({
+      where: {
+        id: input.id,
+      }
+    });
+  } catch (error) {
+    if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === 'P2025') {
+      throw new AppError('USER_NOT_FOUND', 'Admin not found');
     }
-  });
-
-  return admin;
+    throw error;
+  }
 }

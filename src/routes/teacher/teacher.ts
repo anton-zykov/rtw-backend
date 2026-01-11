@@ -11,9 +11,7 @@ export async function teacherRoutes (app: FastifyZodInstance) {
       body: CreateTeacherBody,
       response: {
         201: CreateTeacherReply,
-        400: AppErrorSchema,
-        404: AppErrorSchema,
-        409: AppErrorSchema,
+        default: AppErrorSchema
       },
     },
   }, async (req, reply) => {
@@ -27,8 +25,7 @@ export async function teacherRoutes (app: FastifyZodInstance) {
       body: DeleteTeacherBody,
       response: {
         200: z.void(),
-        400: AppErrorSchema,
-        404: AppErrorSchema,
+        default: AppErrorSchema
       }
     }
   }, async (req, reply) => {

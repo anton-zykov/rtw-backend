@@ -1,4 +1,5 @@
-import type { PrismaClient } from '@prisma/client';
+import { Prisma, type PrismaClient } from '@prisma/client';
+import { AppError } from '#/utils/AppError.js';
 
 export async function deleteUser (
   prisma: PrismaClient,
@@ -6,9 +7,16 @@ export async function deleteUser (
     id: string;
   }
 ): Promise<void> {
-  await prisma.user.delete({
-    where: {
-      id: input.id,
+  try {
+    await prisma.user.delete({
+      where: {
+        id: input.id,
+      }
+    });
+  } catch (err) {
+    if (err instanceof Prisma.PrismaClientKnownRequestError && err.code === 'P2025') {
+      throw new AppError('USER_NOT_FOUND', 'User not found');
     }
-  });
+    throw err;
+  }
 }

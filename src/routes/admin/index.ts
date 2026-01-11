@@ -1,2 +1,2 @@
 export { adminRoutes } from './admin.js';
-export { CreateAdminBody, CreateAdminReply } from './admin.schema.js';
+export { CreateAdminBody, CreateAdminReply, DeleteAdminBody } from './admin.schema.js';

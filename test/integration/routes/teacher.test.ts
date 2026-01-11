@@ -50,7 +50,7 @@ describe('/teacher', () => {
         });
 
         expect(resNoId.statusCode).toBe(400);
-        expect(resNoId.json()).toMatchObject({ message: 'Request validation failed' });
+        expect(resNoId.json()).toStrictEqual({ code: 'VALIDATION', message: 'Request validation failed' });
 
         const resInvalidType = await app.inject({
           method: 'POST',
@@ -64,7 +64,7 @@ describe('/teacher', () => {
         });
 
         expect(resInvalidType.statusCode).toBe(400);
-        expect(resInvalidType.json()).toMatchObject({ message: 'Request validation failed' });
+        expect(resInvalidType.json()).toStrictEqual({ code: 'VALIDATION', message: 'Request validation failed' });
       });
     });
 
@@ -82,7 +82,7 @@ describe('/teacher', () => {
         });
 
         expect(res.statusCode).toBe(404);
-        expect(res.json()).toMatchObject({ message: 'User not found' });
+        expect(res.json()).toStrictEqual({ code: 'USER_NOT_FOUND', message: 'User not found' });
       });
     });
 
@@ -113,7 +113,7 @@ describe('/teacher', () => {
         });
 
         expect(res.statusCode).toBe(409);
-        expect(res.json()).toMatchObject({ message: 'The user already has other role' });
+        expect(res.json()).toStrictEqual({ code: 'CONFLICT', message: 'The user already has other role' });
 
         await cleanUpUser(app, adminCookie, user.id);
       });
@@ -136,7 +136,7 @@ describe('/teacher', () => {
         });
 
         expect(res.statusCode).toBe(409);
-        expect(res.json()).toMatchObject({ message: 'The user is already teacher' });
+        expect(res.json()).toStrictEqual({ code: 'CONFLICT', message: 'The user is already teacher' });
 
         await cleanUpUser(app, adminCookie, user.id);
       });

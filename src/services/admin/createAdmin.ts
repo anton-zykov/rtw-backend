@@ -1,5 +1,5 @@
-import { CustomError } from '#/utils/CustomError.js';
-import type { PrismaClient, Admin } from '@prisma/client';
+import { Prisma, type PrismaClient, type Admin } from '@prisma/client';
+import { AppError } from '#/utils/AppError.js';
 
 export async function createAdmin (
   prisma: PrismaClient,
@@ -7,23 +7,37 @@ export async function createAdmin (
     id: string;
   }
 ): Promise<Admin> {
-  const user = await prisma.user.findUnique({
-    where: {
-      id: input.id,
-    },
-    include: {
-      admin: true,
-      teacher: true,
-      student: true
+  try {
+    const user = await prisma.user.findUniqueOrThrow({
+      where: {
+        id: input.id,
+      },
+      select: {
+        role: true
+      }
+    });
+    if (user.role === 'teacher' || user.role === 'student') throw new AppError('CONFLICT', 'The user already has other role');
+    if (user.role === 'admin') throw new AppError('CONFLICT', 'The user is already admin');
+
+    const [admin] = await prisma.$transaction([
+      prisma.admin.create({
+        data: input,
+      }),
+      prisma.user.update({
+        where: {
+          id: input.id,
+        },
+        data: {
+          role: 'admin',
+        }
+      })
+    ]);
+
+    return admin;
+  } catch (err) {
+    if (err instanceof Prisma.PrismaClientKnownRequestError && err.code === 'P2025') {
+      throw new AppError('USER_NOT_FOUND', 'User not found');
     }
-  });
-  if (!user) throw new CustomError('User not found', 404);
-  if (user.teacher || user.student) throw new CustomError('The user already has other role', 409);
-  if (user.admin) throw new CustomError('The user is already admin', 409);
-
-  const admin = await prisma.admin.create({
-    data: input,
-  });
-
-  return admin;
+    throw err;
+  }
 }

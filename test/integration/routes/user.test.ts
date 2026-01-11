@@ -37,7 +37,7 @@ describe('/user', () => {
         });
 
         expect(res.statusCode).toBe(400);
-        expect(res.json()).toMatchObject({ code: 'FST_ERR_VALIDATION' });
+        expect(res.json()).toStrictEqual({ code: 'VALIDATION', message: 'Request validation failed' });
       });
     });
 
@@ -50,6 +50,7 @@ describe('/user', () => {
         });
 
         expect(res.statusCode).toBe(400);
+        expect(res.json()).toStrictEqual({ code: 'VALIDATION', message: 'Request validation failed' });
       });
     });
 
@@ -68,6 +69,7 @@ describe('/user', () => {
         });
 
         expect(res.statusCode).toBe(400);
+        expect(res.json()).toStrictEqual({ code: 'VALIDATION', message: 'Request validation failed' });
       });
     });
   });
@@ -82,7 +84,7 @@ describe('/user', () => {
             id: 1,
             login: 'Rich',
             fullName: 'Richard',
-            email: 'exa@ple.com',
+            email: 'exam@ple.com',
             telegramId: '@rich'
           },
           headers: {
@@ -95,7 +97,7 @@ describe('/user', () => {
           id: 1,
           login: 'Rich',
           fullName: 'Richard',
-          email: 'exa@ple.com',
+          email: 'exam@ple.com',
           telegramId: '@rich',
           createdAt: expect.any(String),
           updatedAt: expect.any(String)

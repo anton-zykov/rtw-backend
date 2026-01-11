@@ -1,7 +1,7 @@
 import { z } from 'zod';
-import { CreateAdminBody, CreateAdminReply } from './admin.schema.js';
-import { createAdmin } from '#/services/admin/index.js';
-import { CustomError } from '#/utils/CustomError.js';
+import { CreateAdminBody, CreateAdminReply, DeleteAdminBody } from './admin.schema.js';
+import { createAdmin, deleteAdmin } from '#/services/admin/index.js';
+import { AppErrorSchema } from '#/utils/AppError.js';
 import type { FastifyZodInstance } from '#/server.js';
 
 export async function adminRoutes (app: FastifyZodInstance) {
@@ -11,20 +11,25 @@ export async function adminRoutes (app: FastifyZodInstance) {
       body: CreateAdminBody,
       response: {
         201: CreateAdminReply,
-        400: z.object({ message: z.string() }),
-        404: z.object({ message: z.string() }),
-        409: z.object({ message: z.string() }),
+        default: AppErrorSchema
       },
     },
   }, async (req, reply) => {
-    try {
-      const admin = await createAdmin(app.prisma, req.body);
-      reply.status(201).send(admin);
-    } catch (error) {
-      if (error instanceof CustomError) {
-        reply.status((error.status === 404 || error.status === 409) ? error.status : 400)
-          .send({ message: error.message });
-      } else throw error;
-    }
+    const admin = await createAdmin(app.prisma, req.body);
+    return reply.status(201).send(admin);
+  });
+
+  app.delete('/delete', {
+    preHandler: app.requireAdmin,
+    schema: {
+      body: DeleteAdminBody,
+      response: {
+        200: z.void(),
+        default: AppErrorSchema
+      },
+    },
+  }, async (req, reply) => {
+    await deleteAdmin(app.prisma, req.body);
+    return reply.status(200).send();
   });
 }

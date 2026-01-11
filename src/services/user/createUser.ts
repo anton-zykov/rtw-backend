@@ -1,6 +1,6 @@
 import bcrypt from 'bcrypt';
-import { AppError } from '#/utils/AppError.js';
 import { Prisma, type PrismaClient, type User } from '@prisma/client';
+import { AppError } from '#/utils/AppError.js';
 
 export async function createUser (
   prisma: PrismaClient,
@@ -13,9 +13,8 @@ export async function createUser (
   }
 ): Promise<User> {
   const passwordHash = await bcrypt.hash(input.password, 10);
-  let user: User;
   try {
-    user = await prisma.user.create({
+    return await prisma.user.create({
       data: {
         login: input.login,
         passwordHash,
@@ -31,6 +30,4 @@ export async function createUser (
     }
     throw err;
   }
-
-  return user;
 }
