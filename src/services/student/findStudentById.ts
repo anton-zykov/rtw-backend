@@ -15,7 +15,7 @@ export async function findStudentById (
     });
   } catch (error) {
     if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === 'P2025') {
-      throw new AppError('USER_NOT_FOUND', 'Student not found');
+      throw new AppError('USER_NOT_FOUND', 'User not found');
     }
     throw error;
   }
