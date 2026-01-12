@@ -2,7 +2,7 @@ import { loginSuperAdminAndGetCookie } from 'test/helpers/auth.js';
 import { buildTestServer } from 'test/helpers/buildTestServer.js';
 import { createRedisMock } from 'test/helpers/createRedisMock.js';
 import { prismaClient } from 'test/helpers/prismaClient.js';
-import { createUser } from 'test/hooks/createUser.js';
+import { createUser, cleanUpUser, createAdmin, createStudent, createTeacher } from 'test/hooks/index.js';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 
 describe('/auth', () => {
@@ -15,14 +15,10 @@ describe('/auth', () => {
   });
   afterAll(async () => await app.close());
 
-  let user: Awaited<ReturnType<typeof createUser>>;
-  beforeAll(async () => {
-    user = await createUser(app, adminCookie);
-  });
-
   describe('/login', () => {
     describe('when correct credentials are provided', () => {
       it('then should be able to login and recieve working session', async () => {
+        const user = await createUser(app, adminCookie);
         const res = await app.inject({
           method: 'POST',
           url: '/api/auth/login',
@@ -46,12 +42,15 @@ describe('/auth', () => {
         });
 
         expect(meRes.statusCode).toBe(200);
-        expect(meRes.json()).toStrictEqual({ id: user.id, login: user.login });
+        expect(meRes.json()).toStrictEqual({ id: user.id, login: user.login, role: 'not_set' });
+
+        await cleanUpUser(app, adminCookie, user.id);
       });
     });
 
     describe('when incorrect credentials are provided', () => {
       it('then should fail to login and recieve 401', async () => {
+        const user = await createUser(app, adminCookie);
         const res = await app.inject({
           method: 'POST',
           url: '/api/auth/login',
@@ -63,6 +62,8 @@ describe('/auth', () => {
 
         expect(res.cookies.find(cookie => cookie.name === 'sid')).toBeUndefined();
         expect(res.statusCode).toBe(401);
+
+        await cleanUpUser(app, adminCookie, user.id);
       });
     });
   });
@@ -70,6 +71,7 @@ describe('/auth', () => {
   describe('/logout', () => {
     describe('when user has successfully logged in', () => {
       it('then on logout should remove cookie, old session should be invalidated', async () => {
+        const user = await createUser(app, adminCookie);
         const loginRes = await app.inject({
           method: 'POST',
           url: '/api/auth/login',
@@ -90,7 +92,7 @@ describe('/auth', () => {
         });
 
         expect(meAuthenticatedRes.statusCode).toBe(200);
-        expect(meAuthenticatedRes.json()).toStrictEqual({ id: user.id, login: user.login });
+        expect(meAuthenticatedRes.json()).toStrictEqual({ id: user.id, login: user.login, role: 'not_set' });
 
         const logoutRes = await app.inject({
           method: 'POST',
@@ -112,25 +114,148 @@ describe('/auth', () => {
         });
 
         expect(meUnauthenticatedRes.statusCode).toBe(401);
+
+        await cleanUpUser(app, adminCookie, user.id);
       });
     });
   });
 
   describe('/me', () => {
     describe('when there is no logged in user', async () => {
-      it.todo('then should return 401 and proper message', async () => {});
+      it('then should return 401 and proper message', async () => {
+        const user = await createUser(app, adminCookie);
+        const res = await app.inject({
+          method: 'GET',
+          url: '/api/auth/me',
+        });
+
+        expect(res.statusCode).toBe(401);
+        expect(res.json()).toStrictEqual({ code: 'UNAUTHORIZED', message: 'Unauthorized' });
+
+        await cleanUpUser(app, adminCookie, user.id);
+      });
     });
 
     describe('when there is logged in user with no role', async () => {
-      it.todo('then should return user\'s id, login and role===not_set', async () => {});
+      it('then should return user\'s id, login and role===not_set', async () => {
+        const user = await createUser(app, adminCookie);
+        const loginRes = await app.inject({
+          method: 'POST',
+          url: '/api/auth/login',
+          payload: {
+            login: user.login,
+            password: 'correct-password',
+          }
+        });
+
+        const userCookie = 'sid=' + loginRes.cookies.find(cookie => cookie.name === 'sid')?.value;
+
+        const meRes = await app.inject({
+          method: 'GET',
+          url: '/api/auth/me',
+          headers: {
+            cookie: userCookie
+          }
+        });
+
+        expect(meRes.statusCode).toBe(200);
+        expect(meRes.json()).toStrictEqual({ id: user.id, login: user.login, role: 'not_set' });
+
+        await cleanUpUser(app, adminCookie, user.id);
+      });
     });
 
     describe('when there is logged in admin', async () => {
-      it.todo('then should return user\'s id, login and role===admin', async () => {});
+      it('then should return user\'s id, login and role===admin', async () => {
+        const user = await createUser(app, adminCookie);
+        await createAdmin(app, adminCookie, user.id);
+        const loginRes = await app.inject({
+          method: 'POST',
+          url: '/api/auth/login',
+          payload: {
+            login: user.login,
+            password: 'correct-password',
+          }
+        });
+
+        const userCookie = 'sid=' + loginRes.cookies.find(cookie => cookie.name === 'sid')?.value;
+
+        const meRes = await app.inject({
+          method: 'GET',
+          url: '/api/auth/me',
+          headers: {
+            cookie: userCookie
+          }
+        });
+
+        expect(meRes.statusCode).toBe(200);
+        expect(meRes.json()).toStrictEqual({ id: user.id, login: user.login, role: 'admin' });
+
+        await cleanUpUser(app, adminCookie, user.id);
+      });
     });
 
     describe('when there is logged in student', async () => {
-      it.todo('then should return user\'s id, login and role===student', async () => {});
+      it('then should return user\'s id, login and role===student', async () => {
+        const user = await createUser(app, adminCookie);
+        const teacher = await createUser(app, adminCookie);
+        await createTeacher(app, adminCookie, teacher.id);
+        await createStudent(app, adminCookie, user.id, teacher.id);
+        const loginRes = await app.inject({
+          method: 'POST',
+          url: '/api/auth/login',
+          payload: {
+            login: user.login,
+            password: 'correct-password',
+          }
+        });
+
+        const userCookie = 'sid=' + loginRes.cookies.find(cookie => cookie.name === 'sid')?.value;
+
+        const meRes = await app.inject({
+          method: 'GET',
+          url: '/api/auth/me',
+          headers: {
+            cookie: userCookie
+          }
+        });
+
+        expect(meRes.statusCode).toBe(200);
+        expect(meRes.json()).toStrictEqual({ id: user.id, login: user.login, role: 'student' });
+
+        await cleanUpUser(app, adminCookie, user.id);
+        await cleanUpUser(app, adminCookie, teacher.id);
+      });
+    });
+
+    describe('when there is logged in teacher', async () => {
+      it('then should return user\'s id, login and role===teacher', async () => {
+        const user = await createUser(app, adminCookie);
+        await createTeacher(app, adminCookie, user.id);
+        const loginRes = await app.inject({
+          method: 'POST',
+          url: '/api/auth/login',
+          payload: {
+            login: user.login,
+            password: 'correct-password',
+          }
+        });
+
+        const userCookie = 'sid=' + loginRes.cookies.find(cookie => cookie.name === 'sid')?.value;
+
+        const meRes = await app.inject({
+          method: 'GET',
+          url: '/api/auth/me',
+          headers: {
+            cookie: userCookie
+          }
+        });
+
+        expect(meRes.statusCode).toBe(200);
+        expect(meRes.json()).toStrictEqual({ id: user.id, login: user.login, role: 'teacher' });
+
+        await cleanUpUser(app, adminCookie, user.id);
+      });
     });
   });
 });
