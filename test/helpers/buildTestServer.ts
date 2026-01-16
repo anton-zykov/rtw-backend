@@ -16,6 +16,7 @@ export function buildTestServer (
     redisPlugin,
     config: {
       logger: false,
+      https: null,
       cookie: {
         secret: 'test_cookie_secret'
       },

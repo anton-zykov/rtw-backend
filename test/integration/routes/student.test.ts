@@ -1,4 +1,4 @@
-import { loginSuperAdminAndGetCookie } from 'test/helpers/auth.js';
+// import { loginSuperAdminAndGetCookie } from 'test/helpers/auth.js';
 import { buildTestServer } from 'test/helpers/buildTestServer.js';
 import { prismaClient } from 'test/helpers/prismaClient.js';
 import { createRedisMock } from 'test/helpers/createRedisMock.js';
@@ -7,10 +7,10 @@ import { afterAll, beforeAll, describe, it } from 'vitest';
 describe('/student', () => {
   const redisMock = createRedisMock();
   const app = buildTestServer(prismaClient, redisMock);
-  let adminCookie: string;
+  // let adminCookie: string;
   beforeAll(async () => {
     await app.ready();
-    adminCookie = await loginSuperAdminAndGetCookie(app);
+    // adminCookie = await loginSuperAdminAndGetCookie(app);
   });
   afterAll(async () => await app.close());
 

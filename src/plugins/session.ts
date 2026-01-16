@@ -71,7 +71,7 @@ export type SessionPluginOptions = {
 
 export const sessionPlugin: FastifyPluginAsync<SessionPluginOptions> = fp(
   async (app: FastifyInstance, opts: SessionPluginOptions) => {
-    const MS_TO_EXPIRE = 160 * 1000;
+    const MS_TO_EXPIRE = 1600 * 1000;
 
     await app.register(fastifySession, {
       secret: opts.secret,

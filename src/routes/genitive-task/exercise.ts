@@ -42,7 +42,7 @@ const CheckGenitiveExerciseReply = z.array(
 
 export async function genitiveTaskExerciseRoutes (app: FastifyZodInstance) {
   app.post('/get', {
-    preHandler: app.requireOwnerStudent,
+    preHandler: app.requireOwner,
     schema: {
       body: GetGenitiveExerciseBody,
       response: {
@@ -55,7 +55,7 @@ export async function genitiveTaskExerciseRoutes (app: FastifyZodInstance) {
   });
 
   app.post('/check', {
-    preHandler: app.requireOwnerStudent,
+    preHandler: app.requireOwner,
     schema: {
       body: CheckGenitiveExerciseBody,
       response: {

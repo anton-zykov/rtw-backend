@@ -34,7 +34,7 @@ export async function studentRoutes (app: FastifyZodInstance) {
   });
 
   app.get('/get-task-types/:id', {
-    preHandler: app.requireOwner,
+    // preHandler: app.requireOwner,
     schema: {
       params: GetTaskTypesParams,
       response: {
@@ -43,6 +43,7 @@ export async function studentRoutes (app: FastifyZodInstance) {
       },
     },
   }, async (req, reply) => {
+    await new Promise(resolve => setTimeout(resolve, 3000));
     const student = await findStudentById(app.prisma, { id: req.params.id });
     return reply.status(200).send({ taskTypes: student.taskTypes });
   });

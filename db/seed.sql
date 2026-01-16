@@ -22,7 +22,7 @@ INSERT INTO "User" (id, login, "passwordHash", "role") VALUES
 
 INSERT INTO "Admin" (id) VALUES ('d6ff850c-5e8c-466d-95d9-03be8d383534');
 INSERT INTO "Teacher" (id) VALUES ('13c88df2-b3de-4de5-a476-31985427a5a6');
-INSERT INTO "Student" (id, "teacherId", "taskTypes") VALUES ('b53b7776-3a9e-4cfb-9dbc-1a24af5234df', '13c88df2-b3de-4de5-a476-31985427a5a6', ARRAY['genitive']::"TaskType"[]);
+INSERT INTO "Student" (id, "teacherId", "taskTypes") VALUES ('b53b7776-3a9e-4cfb-9dbc-1a24af5234df', '13c88df2-b3de-4de5-a476-31985427a5a6', ARRAY['genitive', 'stress', 'tricky']::"TaskType"[]);
 
 INSERT INTO "GenitiveTask" (id, nominative, options) VALUES
   ('051b6988-1bec-4697-8e61-f73e34fb4148', 'инженер', '[{"word": "инженеры", "correct": true}, {"word": "инженера", "correct": false}]'),
