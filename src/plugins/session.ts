@@ -82,7 +82,7 @@ export const sessionPlugin: FastifyPluginAsync<SessionPluginOptions> = fp(
       cookie: {
         httpOnly: true,
         secure: 'auto',
-        sameSite: 'none',
+        sameSite: 'strict', // TODO: change to 'strict' in production
         path: '/',
         maxAge: MS_TO_EXPIRE,
       },
