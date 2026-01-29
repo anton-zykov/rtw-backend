@@ -30,6 +30,7 @@ export class RedisSessionStore implements SessionStore {
 
   async get (sid: string, callback: any) {
     try {
+      // TODO: add TTL update sometimes
       const data = await this.client.get(this.key(sid));
       if (!data) return callback(null);
       const session = JSON.parse(data);

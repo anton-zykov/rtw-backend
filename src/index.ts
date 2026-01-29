@@ -40,7 +40,7 @@ const app = buildServer({
       secret: process.env['SESSION_SECRET'],
       store: new RedisSessionStore(redisClient, {
         prefix: 'sess:',
-        ttl: 60 * 1000,
+        ttl: 7 * 24 * 60 * 60 * 1000,
       })
     },
     telegram: {
