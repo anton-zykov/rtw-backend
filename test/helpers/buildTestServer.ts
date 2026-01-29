@@ -17,6 +17,7 @@ export function buildTestServer (
     config: {
       logger: false,
       https: null,
+      cors: null,
       cookie: {
         secret: 'test_cookie_secret'
       },

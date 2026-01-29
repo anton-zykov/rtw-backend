@@ -32,6 +32,7 @@ const app = buildServer({
           cert: fs.readFileSync(process.env['HTTPS_CERT'] ?? ''),
         }
       : null,
+    cors: process.env['CORS_FRONTEND_URL'] ? { frontendUrl: process.env['CORS_FRONTEND_URL'] } : null,
     cookie: {
       secret: process.env['COOKIE_SECRET'],
     },
