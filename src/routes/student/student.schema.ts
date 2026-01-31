@@ -15,10 +15,9 @@ export const DeleteStudentBody = z.object({
 });
 
 export const GetTaskTypesParams = z.object({
-  id: z.uuidv4(),
+  userId: z.uuidv4(),
 }).strict();
 
 export const GetTaskTypesReply = z.object({
   taskTypes: z.array(z.enum(TaskType)),
 }).strict();
-

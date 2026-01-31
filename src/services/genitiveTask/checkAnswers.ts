@@ -1,9 +1,11 @@
 import type { PrismaClient, StudentGenitiveTask } from '@prisma/client';
+import type { RedisClientType } from 'redis';
 
 export async function checkAnswers (
   prisma: PrismaClient,
+  redis: RedisClientType,
   input: {
-    studentId: string;
+    userId: string;
     exercise: {
       taskId: string;
       answer: string;
@@ -15,7 +17,7 @@ export async function checkAnswers (
 }[]> {
   const tasks = await prisma.studentGenitiveTask.findMany({
     where: {
-      studentId: input.studentId,
+      studentId: input.userId,
       taskId: {
         in: input.exercise.map(t => t.taskId)
       }
@@ -55,6 +57,8 @@ export async function checkAnswers (
       data: u
     }))
   );
+
+  await redis.del(`${input.userId}:genitive`);
 
   return results;
 }

@@ -1,4 +1,4 @@
-import { CreateStudentReply } from '#/routes/student/index.js';
+import { CreateStudentReply } from '#/routes/student/student.schema.js';
 import type { FastifyZodInstance } from '#/server.js';
 import type z from 'zod';
 

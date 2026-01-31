@@ -1,56 +1,21 @@
-import { z } from 'zod';
+import { GetGenitiveExerciseParams, GetGenitiveExerciseQuery, GetGenitiveExerciseReply, CheckGenitiveExerciseBody, CheckGenitiveExerciseReply } from './exercise.schema.js';
 import { checkAnswers, selectForExercise } from '#/services/genitiveTask/index.js';
+import { AppErrorSchema } from '#/utils/AppError.js';
 import type { FastifyZodInstance } from '#/server.js';
 
-const GetGenitiveExerciseBody = z.object({
-  studentId: z.uuidv4(),
-  amount: z.number().int().positive().optional(),
-}).strict();
-
-const GetGenitiveExerciseReply = z.array(
-  z.object({
-    taskId: z.uuid(),
-    weight: z.number().int().positive(),
-    nominative: z.string(),
-    options: z.unknown().pipe(
-      z.array(
-        z.object({
-          word: z.string(),
-          correct: z.boolean(),
-        })
-      )
-    ),
-  })
-);
-
-const CheckGenitiveExerciseBody = z.object({
-  studentId: z.uuidv4(),
-  exercise: z.array(
-    z.object({
-      taskId: z.uuid(),
-      answer: z.string(),
-    })
-  ),
-}).strict();
-
-const CheckGenitiveExerciseReply = z.array(
-  z.object({
-    taskId: z.uuid(),
-    correct: z.boolean(),
-  })
-);
-
 export async function genitiveTaskExerciseRoutes (app: FastifyZodInstance) {
-  app.post('/get', {
+  app.get('/:userId', {
     preHandler: app.requireOwner,
     schema: {
-      body: GetGenitiveExerciseBody,
+      params: GetGenitiveExerciseParams,
+      querystring: GetGenitiveExerciseQuery,
       response: {
         200: GetGenitiveExerciseReply,
+        default: AppErrorSchema
       },
     },
   }, async (req, reply) => {
-    const tasks = await selectForExercise(app.prisma, app.redis, req.body);
+    const tasks = await selectForExercise(app.prisma, app.redis, req.params.userId, req.query.amount);
     return reply.status(200).send(tasks);
   });
 
@@ -60,11 +25,11 @@ export async function genitiveTaskExerciseRoutes (app: FastifyZodInstance) {
       body: CheckGenitiveExerciseBody,
       response: {
         200: CheckGenitiveExerciseReply,
-        400: z.object({ message: z.string() }),
+        default: AppErrorSchema
       }
     }
   }, async (req, reply) => {
-    const tasks = await checkAnswers(app.prisma, req.body);
+    const tasks = await checkAnswers(app.prisma, app.redis, req.body);
     return reply.status(200).send(tasks);
   });
 }

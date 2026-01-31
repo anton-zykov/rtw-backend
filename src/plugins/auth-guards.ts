@@ -80,7 +80,8 @@ export const authGuardPlugin = fp(async (app) => {
     'requireOwner',
     async function requireOwner (req, reply) {
       if (!req.session.userId) return reply.unauthorized();
-      if (req.session.userId !== (req.body as { id?: string }).id) return reply.forbidden();
+      if (req.session.userId !== (req.body as { userId?: string })?.userId &&
+        req.session.userId !== (req.params as { userId?: string })?.userId) return reply.forbidden();
     }
   );
 });
