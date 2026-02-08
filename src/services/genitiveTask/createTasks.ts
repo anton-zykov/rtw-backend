@@ -1,4 +1,5 @@
-import { PrismaClient, type GenitiveTask } from '@prisma/client';
+import { Prisma, type PrismaClient, type GenitiveTask } from '@prisma/client';
+import { AppError } from '#/utils/AppError.js';
 
 export async function createTasks (
   prisma: PrismaClient,
@@ -10,14 +11,19 @@ export async function createTasks (
     }[];
   }[]
 ): Promise<GenitiveTask[]> {
-  const tasks = await prisma.genitiveTask.createManyAndReturn({
-    data: input.map((item) => {
-      return {
-        nominative: item.nominative,
-        options: item.options
-      };
-    })
-  });
-
-  return tasks;
+  try {
+    return await prisma.genitiveTask.createManyAndReturn({
+      data: input.map((item) => {
+        return {
+          nominative: item.nominative,
+          options: item.options
+        };
+      })
+    });
+  } catch (error) {
+    if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === 'P2002') {
+      throw new AppError('CONFLICT', 'Task already exists');
+    }
+    throw error;
+  }
 }

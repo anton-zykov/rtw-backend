@@ -8,15 +8,18 @@ type StudentGenitiveTaskWithTaskDetails =
 export async function selectForExercise (
   prisma: PrismaClient,
   redis: RedisClientType,
-  studentId: string,
-  amount: number | undefined
+  input: {
+    studentId: string,
+    amount: number | undefined
+  }
 ): Promise<StudentGenitiveTaskWithTaskDetails[]> {
-  const cacheKey = `${studentId}:genitive`;
+  // TODO: deal with deleted tasks
+  const cacheKey = `${input.studentId}:genitive`;
   const cache = await redis.get(cacheKey);
   // We trust the cache here
   const existingExercise = JSON.parse(cache || '[]') as StudentGenitiveTaskWithTaskDetails[];
   // TODO: extract the 10 constant
-  const amountToBeRetrieved = (amount || 10) - existingExercise.length;
+  const amountToBeRetrieved = (input.amount || 10) - existingExercise.length;
 
   if (amountToBeRetrieved === 0) return existingExercise;
   if (amountToBeRetrieved < 0) {
@@ -28,7 +31,7 @@ export async function selectForExercise (
   const retrievedTasks = await prisma.$queryRaw<StudentGenitiveTaskWithTaskDetails[]>`
     SELECT "taskId", "nominative", "options" FROM "StudentGenitiveTask"
     JOIN "GenitiveTask" ON "StudentGenitiveTask"."taskId" = "GenitiveTask"."id"
-    WHERE "studentId" = ${studentId}::uuid
+    WHERE "studentId" = ${input.studentId}::uuid
     ORDER BY -LN(RANDOM()) / weight
     LIMIT ${amountToBeRetrieved};
   `;

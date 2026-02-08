@@ -56,7 +56,6 @@ export async function authRoutes (app: FastifyZodInstance) {
     }
   }, async (req, reply) => {
     const user = await findUserById(app.prisma, { id: req.session.userId });
-    if (!user) throw new AppError('USER_NOT_FOUND', 'User not found');
     return reply.status(200).send(user);
   });
 }

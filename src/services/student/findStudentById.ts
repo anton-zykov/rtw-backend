@@ -13,10 +13,10 @@ export async function findStudentById (
         id: input.id,
       }
     });
-  } catch (error) {
-    if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === 'P2025') {
+  } catch (err) {
+    if (err instanceof Prisma.PrismaClientKnownRequestError && err.code === 'P2025') {
       throw new AppError('USER_NOT_FOUND', 'User not found');
     }
-    throw error;
+    throw err;
   }
 }

@@ -1,17 +1,7 @@
-import { z } from 'zod';
-import { Prisma } from '@prisma/client';
+import { AssignToStudentBody, AssignToStudentReply, UnassignFromStudentBody, UnassignFromStudentReply } from './student.schema.js';
 import { assignToStudent } from '#/services/genitiveTask/index.js';
+import { AppErrorSchema } from '#/utils/AppError.js';
 import type { FastifyZodInstance } from '#/server.js';
-
-const AssignToStudentBody = z.object({
-  studentId: z.uuidv4(),
-  genitiveTaskIds: z.array(z.string()),
-}).strict();
-
-const AssignToStudentReply = z.object({
-  created: z.array(z.string()),
-  skipped: z.number(),
-});
 
 export async function genitiveTaskStudentRoutes (app: FastifyZodInstance) {
   app.post('/assign', {
@@ -20,37 +10,21 @@ export async function genitiveTaskStudentRoutes (app: FastifyZodInstance) {
       body: AssignToStudentBody,
       response: {
         200: AssignToStudentReply,
-        404: z.object({ message: z.string() }),
-        500: z.null(),
+        default: AppErrorSchema,
       },
     },
   }, async (req, reply) => {
-    try {
-      const { created, skipped } = await assignToStudent(app.prisma, req.body);
-      reply.status(200).send({ created, skipped });
-    } catch (error) {
-      if (error instanceof Prisma.PrismaClientKnownRequestError) {
-        if (error.code === 'P2025') {
-          reply.status(404).send({
-            message: 'Student or tasks not found'
-          });
-        }
-      }
-
-      reply.status(500);
-    }
+    const { created, skipped } = await assignToStudent(app.prisma, req.body);
+    return reply.status(200).send({ created, skipped });
   });
 
-  app.delete('/remove', {
+  app.delete('/unassign', {
     preHandler: app.requireAdmin,
     schema: {
-      body: z.object({
-        studentId: z.number(),
-        genitiveTaskIds: z.array(z.uuid()),
-      }),
+      body: UnassignFromStudentBody,
       response: {
-        200: z.null(),
-        404: z.object({ message: z.string() }),
+        200: UnassignFromStudentReply,
+        default: AppErrorSchema,
       },
     },
   }, async (_req, _reply) => {

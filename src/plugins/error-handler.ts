@@ -3,6 +3,7 @@ import { AppError, type AppErrorCode } from '#/utils/AppError.js';
 
 export const codeToHttp: Record<AppErrorCode, number> = {
   USER_NOT_FOUND: 404,
+  TASK_NOT_FOUND: 404,
   FORBIDDEN: 403,
   VALIDATION: 400,
   CONFLICT: 409,

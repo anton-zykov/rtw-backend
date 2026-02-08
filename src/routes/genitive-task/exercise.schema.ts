@@ -11,7 +11,6 @@ export const GetGenitiveExerciseQuery = z.object({
 export const GetGenitiveExerciseReply = z.array(
   z.object({
     taskId: z.uuid(),
-    weight: z.number().int().positive(),
     nominative: z.string(),
     options: z.unknown().pipe(
       z.array(

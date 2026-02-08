@@ -7,8 +7,8 @@ import fastify, {
   type RawServerDefault,
 } from 'fastify';
 import { fastifyCookie } from '@fastify/cookie';
-import { authGuardPlugin } from '#/plugins/auth-guards.js';
-import { errorHandlerPlugin } from './plugins/errorHandler.js';
+import { authGuardPlugin } from '#/plugins/auth-guard.js';
+import { errorHandlerPlugin } from './plugins/error-handler.js';
 import type { PrismaPluginOptions } from '#/plugins/prisma.js';
 import type { RedisPluginOptions } from '#/plugins/redis.js';
 import type { TelegramPluginOptions } from '#/plugins/telegram.js';
@@ -63,7 +63,17 @@ type BuildDeps = {
 
 export function buildServer (deps: BuildDeps): FastifyZodInstance {
   const app = fastify({
-    logger: deps.config.logger,
+    logger: deps.config.logger
+      ? {
+          transport: {
+            target: 'pino-pretty',
+            options: {
+              translateTime: 'HH:MM:ss Z',
+              ignore: 'pid,hostname',
+            },
+          },
+        }
+      : false,
     https: deps.config.https && {
       key: deps.config.https.key,
       cert: deps.config.https.cert,

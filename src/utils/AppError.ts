@@ -2,6 +2,7 @@ import z from 'zod';
 
 export const APP_ERROR_CODES = [
   'USER_NOT_FOUND',
+  'TASK_NOT_FOUND',
   'FORBIDDEN',
   'VALIDATION',
   'CONFLICT',
