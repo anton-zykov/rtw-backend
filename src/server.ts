@@ -22,18 +22,12 @@ import {
 import {
   adminRoutes,
   authRoutes,
-  genitiveTaskExerciseRoutes,
-  genitiveTaskPoolRoutes,
-  genitiveTaskStudentRoutes,
+  genitiveTaskRoutes,
   healthRoutes,
-  stressTaskExerciseRoutes,
-  stressTaskPoolRoutes,
-  stressTaskStudentRoutes,
+  stressTaskRoutes,
   studentRoutes,
   teacherRoutes,
-  trickyTaskExerciseRoutes,
-  trickyTaskPoolRoutes,
-  trickyTaskStudentRoutes,
+  trickyTaskRoutes,
   userRoutes
 } from '#/routes/index.js';
 
@@ -98,18 +92,12 @@ export function buildServer (deps: BuildDeps): FastifyZodInstance {
 
   app.register(adminRoutes, { prefix: '/api/admin' });
   app.register(authRoutes, { prefix: '/api/auth' });
-  app.register(genitiveTaskExerciseRoutes, { prefix: '/api/genitive-task/exercise' });
-  app.register(genitiveTaskPoolRoutes, { prefix: '/api/genitive-task/pool' });
-  app.register(genitiveTaskStudentRoutes, { prefix: '/api/genitive-task/student' });
+  app.register(genitiveTaskRoutes, { prefix: '/api/genitive-task' });
   app.register(healthRoutes, { prefix: '/api' });
   app.register(studentRoutes, { prefix: '/api/student' });
-  app.register(stressTaskExerciseRoutes, { prefix: '/api/stress-task/exercise' });
-  app.register(stressTaskPoolRoutes, { prefix: '/api/stress-task/pool' });
-  app.register(stressTaskStudentRoutes, { prefix: '/api/stress-task/student' });
+  app.register(stressTaskRoutes, { prefix: '/api/stress-task' });
   app.register(teacherRoutes, { prefix: '/api/teacher' });
-  app.register(trickyTaskExerciseRoutes, { prefix: '/api/tricky-task/exercise' });
-  app.register(trickyTaskPoolRoutes, { prefix: '/api/tricky-task/pool' });
-  app.register(trickyTaskStudentRoutes, { prefix: '/api/tricky-task/student' });
+  app.register(trickyTaskRoutes, { prefix: '/api/tricky-task' });
   app.register(userRoutes, { prefix: '/api/user' });
 
   return app;
