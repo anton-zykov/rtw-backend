@@ -4,6 +4,7 @@ import path from 'node:path';
 export default defineConfig({
   test: {
     environment: 'node',
+    setupFiles: ['./test/matchers/uuidv4.ts'],
     // setupFiles: ['test/setup.ts'],
     globalSetup: [
       'test/setup.ts'

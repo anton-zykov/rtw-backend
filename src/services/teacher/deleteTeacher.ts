@@ -19,4 +19,6 @@ export async function deleteTeacher (
     }
     throw err;
   }
+
+  // TODO teacher deletion deletes only Student model with their tasks, think about it
 }

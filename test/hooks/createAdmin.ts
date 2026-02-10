@@ -1,4 +1,4 @@
-import { CreateAdminReply } from '#/routes/admin/index.js';
+import { CreateAdminReply } from '#/routes/admin/admin.schema.js';
 import type { FastifyZodInstance } from '#/server.js';
 import type z from 'zod';
 

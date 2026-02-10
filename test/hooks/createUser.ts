@@ -1,4 +1,4 @@
-import { CreateUserReply } from '#/routes/user/index.js';
+import { CreateUserReply } from '#/routes/user/create.schema.js';
 import type { FastifyZodInstance } from '#/server.js';
 import type z from 'zod';
 
