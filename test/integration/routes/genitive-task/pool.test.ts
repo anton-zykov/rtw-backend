@@ -17,7 +17,7 @@ describe('/genitive-task/pool', () => {
   });
   afterAll(async () => await app.close());
 
-  describe('/create', () => {
+  describe('POST /create', () => {
     describe('when valid tasks are provided', async () => {
       it('then should create tasks and return their ids', async () => {
         const res = await app.inject({
@@ -122,7 +122,7 @@ describe('/genitive-task/pool', () => {
     });
   });
 
-  describe('/delete', () => {
+  describe('DELETE /delete', () => {
     describe('when valid task ids are provided', async () => {
       it('then should delete tasks', async () => {
         const task = genitiveTasks[0];
@@ -173,6 +173,12 @@ describe('/genitive-task/pool', () => {
         });
 
         expect(res.statusCode).toBe(200);
+      });
+    });
+
+    describe('when deleting tasks assigned to students', () => {
+      it('then should handle cascade deletion properly', async () => {
+        // TODO: implement
       });
     });
   });

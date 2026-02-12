@@ -34,12 +34,20 @@ import type { FastifyInstance } from 'fastify';
 // }));
 
 export async function loginSuperAdminAndGetCookie (app: FastifyInstance) {
+  return loginAsUserAndGetCookie(app, 'SuperAdmin', 'test-password');
+}
+
+export async function loginAsUserAndGetCookie (
+  app: FastifyInstance,
+  login: string,
+  password: string
+) {
   const res = await app.inject({
     method: 'POST',
     url: '/api/auth/login',
     payload: {
-      login: 'SuperAdmin',
-      password: 'test-password',
+      login,
+      password,
     },
   });
 
