@@ -21,6 +21,7 @@ import {
 } from 'fastify-type-provider-zod';
 import {
   adminRoutes,
+  adverbsTaskRoutes,
   authRoutes,
   genitiveTaskRoutes,
   healthRoutes,
@@ -91,6 +92,7 @@ export function buildServer (deps: BuildDeps): FastifyZodInstance {
   }
 
   app.register(adminRoutes, { prefix: '/api/admin' });
+  app.register(adverbsTaskRoutes, { prefix: '/api/adverbs-task' });
   app.register(authRoutes, { prefix: '/api/auth' });
   app.register(genitiveTaskRoutes, { prefix: '/api/genitive-task' });
   app.register(healthRoutes, { prefix: '/api' });

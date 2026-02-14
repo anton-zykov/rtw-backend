@@ -1,3 +1,4 @@
+export { cleanUpAdverbsTasks } from './cleanUpAdverbsTasks.js';
 export { createAdmin } from './createAdmin.js';
 export { createGenitiveTasks } from './createGenitiveTasks.js';
 export { createStudent } from './createStudent.js';
