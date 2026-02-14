@@ -55,8 +55,8 @@ jobs:
             npm run build
 
             # если нужно:
-            # npm run prisma:migrate
-            # npm run prisma:generate
+            npx prisma migrate deploy
+            npx prisma generate
 
             pm2 reload rtw-backend --update-env
             pm2 save

@@ -39,6 +39,7 @@ model Student {
   teacherId     String                @db.Uuid
   teacher       Teacher               @relation(fields: [teacherId], references: [id], onDelete: Cascade)
   taskTypes     TaskType[]            @default([])
+  adverbsTasks  StudentAdverbsTask[]
   genitiveTasks StudentGenitiveTask[]
   stressTasks   StudentStressTask[]
   trickyTasks   StudentTrickyTask[]
