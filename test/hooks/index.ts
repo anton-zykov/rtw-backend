@@ -6,3 +6,5 @@ export { createTeacher } from './createTeacher.js';
 export { createUser } from './createUser.js';
 export { cleanUpUser } from './cleanUpUser.js';
 export { cleanUpGenitiveTasks } from './cleanUpGenitiveTasks.js';
+export { cleanUpStressTasks } from './cleanUpStressTasks.js';
+export { cleanUpTrickyTasks } from './cleanUpTrickyTasks.js';

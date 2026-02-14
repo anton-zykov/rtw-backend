@@ -1,4 +1,5 @@
-import { PrismaClient, type StressTask } from '@prisma/client';
+import { Prisma, type PrismaClient, type StressTask } from '@prisma/client';
+import { AppError } from '#/utils/AppError.js';
 
 export async function createStressTasks (
   prisma: PrismaClient,
@@ -9,13 +10,18 @@ export async function createStressTasks (
     }[];
   }[]
 ): Promise<StressTask[]> {
-  const tasks = await prisma.stressTask.createManyAndReturn({
-    data: input.map((item) => {
-      return {
-        options: item.options
-      };
-    })
-  });
-
-  return tasks;
+  try {
+    return await prisma.stressTask.createManyAndReturn({
+      data: input.map((item) => {
+        return {
+          options: item.options
+        };
+      })
+    });
+  } catch (error) {
+    if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === 'P2002') {
+      throw new AppError('CONFLICT', 'Task already exists');
+    }
+    throw error;
+  }
 }

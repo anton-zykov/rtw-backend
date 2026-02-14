@@ -1,4 +1,5 @@
-import { PrismaClient, type TrickyTask } from '@prisma/client';
+import { Prisma, type PrismaClient, type TrickyTask } from '@prisma/client';
+import { AppError } from '#/utils/AppError.js';
 
 export async function createTrickyTasks (
   prisma: PrismaClient,
@@ -10,14 +11,19 @@ export async function createTrickyTasks (
     }[]
   }[]
 ): Promise<TrickyTask[]> {
-  const tasks = await prisma.trickyTask.createManyAndReturn({
-    data: input.map((item) => {
-      return {
-        age: item.age,
-        options: item.options
-      };
-    })
-  });
-
-  return tasks;
+  try {
+    return await prisma.trickyTask.createManyAndReturn({
+      data: input.map((item) => {
+        return {
+          age: item.age,
+          options: item.options
+        };
+      })
+    });
+  } catch (error) {
+    if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === 'P2002') {
+      throw new AppError('CONFLICT', 'Task already exists');
+    }
+    throw error;
+  }
 }
