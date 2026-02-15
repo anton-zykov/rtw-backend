@@ -259,15 +259,11 @@ describe('/tricky-task/exercise', () => {
           data: { weight: 1 },
         });
 
-        const exerciseRes = await app.inject({
+        await app.inject({
           method: 'GET',
           url: `/api/tricky-task/exercise/${student.id}`,
           headers: { Cookie: studentCookie },
         });
-        const exercise = await exerciseRes.json() as Array<{
-          taskId: string;
-          incorrectWord: string;
-        }>;
 
         const correctAnswer = trickyTasks[0]!.correctWord;
         await app.inject({
@@ -337,15 +333,11 @@ describe('/tricky-task/exercise', () => {
           data: { weight: 50 },
         });
 
-        const exerciseRes = await app.inject({
+        await app.inject({
           method: 'GET',
           url: `/api/tricky-task/exercise/${student.id}`,
           headers: { Cookie: studentCookie },
         });
-        const exercise = await exerciseRes.json() as Array<{
-          taskId: string;
-          incorrectWord: string;
-        }>;
 
         const incorrectAnswer = trickyTasks[0]!.incorrectWord;
         await app.inject({
