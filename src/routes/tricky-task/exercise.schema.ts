@@ -12,14 +12,7 @@ export const GetTrickyExerciseReply = z.array(
   z.object({
     taskId: z.uuid(),
     age: z.number(),
-    options: z.unknown().pipe(
-      z.array(
-        z.object({
-          word: z.string(),
-          correct: z.boolean(),
-        })
-      )
-    ),
+    incorrectWord: z.string(),
   })
 );
 

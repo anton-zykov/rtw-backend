@@ -1,72 +1,57 @@
 export const trickyTasks = [
   {
-    age: 8,
-    options: [
-      { word: 'подъезд', correct: true },
-      { word: 'подезд', correct: false },
-    ],
+    correctWord: 'алфавит',
+    incorrectWord: 'алф-вит',
+    age: 1
   },
   {
-    age: 9,
-    options: [
-      { word: 'объявление', correct: true },
-      { word: 'обявление', correct: false },
-    ],
+    correctWord: 'сканер',
+    incorrectWord: 'скан-р',
+    age: 7
   },
   {
-    age: 10,
-    options: [
-      { word: 'съехал', correct: true },
-      { word: 'сехал', correct: false },
-    ],
+    correctWord: 'случай',
+    incorrectWord: 'случ-й',
+    age: 7
   },
   {
-    age: 8,
-    options: [
-      { word: 'вьюга', correct: true },
-      { word: 'вюга', correct: false },
-    ],
+    correctWord: 'снаряд',
+    incorrectWord: 'сн-ряд',
+    age: 7
   },
   {
-    age: 9,
-    options: [
-      { word: 'объяснить', correct: true },
-      { word: 'обяснить', correct: false },
-    ],
+    correctWord: 'старательно',
+    incorrectWord: 'ст-рательно',
+    age: 7
   },
   {
-    age: 10,
-    options: [
-      { word: 'съёмка', correct: true },
-      { word: 'сёмка', correct: false },
-    ],
+    correctWord: 'континент',
+    incorrectWord: 'конт-нент',
+    age: 8
   },
   {
-    age: 8,
-    options: [
-      { word: 'предъюбилейный', correct: true },
-      { word: 'предюбилейный', correct: false },
-    ],
+    correctWord: 'конференция',
+    incorrectWord: 'к-нференция',
+    age: 8
   },
   {
-    age: 9,
-    options: [
-      { word: 'разъезд', correct: true },
-      { word: 'разезд', correct: false },
-    ],
+    correctWord: 'кооператив',
+    incorrectWord: 'кооп-ратив',
+    age: 8
   },
   {
-    age: 10,
-    options: [
-      { word: 'съесть', correct: true },
-      { word: 'сесть', correct: false },
-    ],
+    correctWord: 'лотерея',
+    incorrectWord: 'лот-рея',
+    age: 5
   },
   {
-    age: 8,
-    options: [
-      { word: 'объём', correct: true },
-      { word: 'обём', correct: false },
-    ],
+    correctWord: 'макет',
+    incorrectWord: 'м-кет',
+    age: 5
+  },
+  {
+    correctWord: 'маршрут',
+    incorrectWord: 'м-ршрут',
+    age: 5
   },
 ] as const;

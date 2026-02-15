@@ -57,14 +57,15 @@ describe('/tricky-task/exercise', () => {
         const exercise = await exerciseRes.json() as Array<{
           taskId: string;
           age: number;
-          options: Array<{ word: string; correct: boolean }>;
+          incorrectWord: string;
         }>;
 
         expect(exercise.length).toBe(10);
         for (const task of exercise) {
           expect(task.taskId).toBeUuidV4();
           expect(task.age).toBeDefined();
-          expect(task.options.length).toBeGreaterThanOrEqual(2);
+          expect(task.incorrectWord).toBeDefined();
+          expect(typeof task.incorrectWord).toBe('string');
         }
 
         await cleanUpTrickyTasks(app, adminCookie, taskIds);
@@ -112,7 +113,7 @@ describe('/tricky-task/exercise', () => {
         const firstExercise = await firstRes.json() as Array<{
           taskId: string;
           age: number;
-          options: Array<{ word: string; correct: boolean }>;
+          incorrectWord: string;
         }>;
 
         const secondRes = await app.inject({
@@ -124,7 +125,7 @@ describe('/tricky-task/exercise', () => {
         const secondExercise = await secondRes.json() as Array<{
           taskId: string;
           age: number;
-          options: Array<{ word: string; correct: boolean }>;
+          incorrectWord: string;
         }>;
 
         expect(secondExercise).toEqual(firstExercise);
@@ -176,13 +177,16 @@ describe('/tricky-task/exercise', () => {
         const exercise = await exerciseRes.json() as Array<{
           taskId: string;
           age: number;
-          options: Array<{ word: string; correct: boolean }>;
+          incorrectWord: string;
         }>;
 
+        const taskIdToCorrect = Object.fromEntries(
+          taskIds.map((id, i) => [id, trickyTasks[i]!.correctWord])
+        );
         const firstTask = exercise[0]!;
         const secondTask = exercise[1]!;
-        const correctAnswer = firstTask.options.find(o => o.correct)!.word;
-        const incorrectAnswer = secondTask.options.find(o => !o.correct)!.word;
+        const correctAnswer = taskIdToCorrect[firstTask.taskId]!;
+        const incorrectAnswer = 'wrong';
         const checkRes = await app.inject({
           method: 'POST',
           url: '/api/tricky-task/exercise/check',
@@ -262,10 +266,10 @@ describe('/tricky-task/exercise', () => {
         });
         const exercise = await exerciseRes.json() as Array<{
           taskId: string;
-          options: Array<{ word: string; correct: boolean }>;
+          incorrectWord: string;
         }>;
 
-        const correctAnswer = exercise[0]!.options.find(o => o.correct)!.word;
+        const correctAnswer = trickyTasks[0]!.correctWord;
         await app.inject({
           method: 'POST',
           url: '/api/tricky-task/exercise/check',
@@ -340,10 +344,10 @@ describe('/tricky-task/exercise', () => {
         });
         const exercise = await exerciseRes.json() as Array<{
           taskId: string;
-          options: Array<{ word: string; correct: boolean }>;
+          incorrectWord: string;
         }>;
 
-        const incorrectAnswer = exercise[0]!.options.find(o => !o.correct)!.word;
+        const incorrectAnswer = trickyTasks[0]!.incorrectWord;
         await app.inject({
           method: 'POST',
           url: '/api/tricky-task/exercise/check',

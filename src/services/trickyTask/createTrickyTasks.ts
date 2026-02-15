@@ -5,20 +5,17 @@ export async function createTrickyTasks (
   prisma: PrismaClient,
   input: {
     age: number,
-    options: {
-      word: string,
-      correct: boolean
-    }[]
+    correctWord: string,
+    incorrectWord: string
   }[]
 ): Promise<TrickyTask[]> {
   try {
     return await prisma.trickyTask.createManyAndReturn({
-      data: input.map((item) => {
-        return {
-          age: item.age,
-          options: item.options
-        };
-      })
+      data: input.map((item) => ({
+        age: item.age,
+        correctWord: item.correctWord,
+        incorrectWord: item.incorrectWord
+      }))
     });
   } catch (error) {
     if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === 'P2002') {

@@ -31,7 +31,7 @@ export async function checkAnswers (
 
   const results = tasks.map(t => {
     const answer = input.exercise.find(e => e.taskId === t.taskId)!.answer;
-    const correct = !!(t.task.options as { word: string, correct: boolean }[]).find(o => o.word === answer)?.correct;
+    const correct = t.task.correctWord === answer;
     dbUpdates.push({
       studentId: t.studentId,
       taskId: t.taskId,

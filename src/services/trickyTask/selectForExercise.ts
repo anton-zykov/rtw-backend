@@ -3,7 +3,7 @@ import type { RedisClientType } from 'redis';
 
 type StudentTrickyTaskWithTaskDetails =
   Pick<StudentTrickyTask, 'taskId' | 'weight'> &
-  Pick<TrickyTask, 'age' | 'options'>;
+  Pick<TrickyTask, 'age' | 'incorrectWord'>;
 
 export async function selectForExercise (
   prisma: PrismaClient,
@@ -29,7 +29,7 @@ export async function selectForExercise (
   }
 
   const retrievedTasks = await prisma.$queryRaw<StudentTrickyTaskWithTaskDetails[]>`
-    SELECT "taskId", "age", "options" FROM "StudentTrickyTask"
+    SELECT "taskId", "age", "incorrectWord" FROM "StudentTrickyTask"
     JOIN "TrickyTask" ON "StudentTrickyTask"."taskId" = "TrickyTask"."id"
     WHERE "studentId" = ${input.studentId}::uuid
     ORDER BY -LN(RANDOM()) / weight

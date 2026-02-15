@@ -45,7 +45,7 @@ describe('/tricky-task/pool', () => {
       });
     });
 
-    describe('when no options are provided', async () => {
+    describe('when correctWord is empty', async () => {
       it('then should return 400 with proper message', async () => {
         const res = await app.inject({
           method: 'POST',
@@ -55,7 +55,8 @@ describe('/tricky-task/pool', () => {
           },
           body: [{
             age: 8,
-            options: [],
+            correctWord: '',
+            incorrectWord: 'test',
           }],
         });
 
@@ -64,7 +65,7 @@ describe('/tricky-task/pool', () => {
       });
     });
 
-    describe('when less than 2 options are provided', async () => {
+    describe('when incorrectWord is empty', async () => {
       it('then should return 400 with proper message', async () => {
         const res = await app.inject({
           method: 'POST',
@@ -74,45 +75,8 @@ describe('/tricky-task/pool', () => {
           },
           body: [{
             age: 8,
-            options: [{ word: 'test', correct: true }],
-          }],
-        });
-
-        expect(res.statusCode).toBe(400);
-        expect(res.json()).toStrictEqual({ code: 'VALIDATION', message: 'Request validation failed' });
-      });
-    });
-
-    describe('when more than 1 correct option is provided', async () => {
-      it('then should return 400 with proper message', async () => {
-        const res = await app.inject({
-          method: 'POST',
-          url: '/api/tricky-task/pool/create',
-          headers: {
-            Cookie: adminCookie,
-          },
-          body: [{
-            age: 8,
-            options: [{ word: 'test', correct: true }, { word: 'test', correct: true }],
-          }],
-        });
-
-        expect(res.statusCode).toBe(400);
-        expect(res.json()).toStrictEqual({ code: 'VALIDATION', message: 'Request validation failed' });
-      });
-    });
-
-    describe('when no correct option is provided', async () => {
-      it('then should return 400 with proper message', async () => {
-        const res = await app.inject({
-          method: 'POST',
-          url: '/api/tricky-task/pool/create',
-          headers: {
-            Cookie: adminCookie,
-          },
-          body: [{
-            age: 8,
-            options: [{ word: 'test', correct: false }, { word: 'test', correct: false }],
+            correctWord: 'test',
+            incorrectWord: '',
           }],
         });
 
