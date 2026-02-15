@@ -1,8 +1,9 @@
 model TrickyTask {
-  id       String              @id @default(uuid())
-  age      Int
-  options  Json                @db.JsonB // { word: string; correct: boolean }
-  students StudentTrickyTask[]
+  id            String              @id @default(uuid())
+  age           Int
+  correctWord   String
+  incorrectWord String
+  students      StudentTrickyTask[]
 }
 
 model StudentTrickyTask {
