@@ -28,6 +28,7 @@ model Admin {
 }
 
 enum TaskType {
+  adverbs
   genitive
   stress
   tricky
