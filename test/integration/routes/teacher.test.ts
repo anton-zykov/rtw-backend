@@ -1,4 +1,4 @@
-import { loginSuperAdminAndGetCookie } from 'test/helpers/auth.js';
+import { loginSuperAdminAndGetCookie, loginAsUserAndGetCookie } from 'test/helpers/auth.js';
 import { buildTestServer } from 'test/helpers/buildTestServer.js';
 import { prismaClient } from 'test/helpers/prismaClient.js';
 import { createRedisMock } from 'test/helpers/createRedisMock.js';
@@ -212,6 +212,66 @@ describe('/teacher', () => {
 
         expect(res.statusCode).toBe(404);
         expect(res.json()).toStrictEqual({ code: 'USER_NOT_FOUND', message: 'User not found' });
+      });
+    });
+  });
+
+  describe('GET /my-students/:teacherId', () => {
+    describe('when teacher is logged in and has students', () => {
+      it('then should return 200 with list of students', async () => {
+        const teacherUser = await createUser(app, adminCookie);
+        await createTeacher(app, adminCookie, teacherUser.id);
+
+        const studentUser = await createUser(app, adminCookie);
+        const student = await createStudent(app, adminCookie, studentUser.id, teacherUser.id);
+
+        const teacherCookie = await loginAsUserAndGetCookie(app, teacherUser.login, 'correct-password');
+
+        const res = await app.inject({
+          method: 'GET',
+          url: `/api/teacher/my-students/${teacherUser.id}`,
+          headers: {
+            cookie: teacherCookie
+          }
+        });
+
+        expect(res.statusCode).toBe(200);
+        const body = res.json();
+        expect(body).toHaveLength(1);
+        expect(body[0]).toMatchObject({
+          id: student.id,
+          login: studentUser.login,
+          active: true,
+          fullName: studentUser.fullName,
+          email: studentUser.email,
+          telegramId: studentUser.telegramId,
+          taskTypes: []
+        });
+
+        await cleanUpUser(app, adminCookie, studentUser.id);
+        await cleanUpUser(app, adminCookie, teacherUser.id);
+      });
+    });
+
+    describe('when teacher is logged in and has no students', () => {
+      it('then should return 200 with empty array', async () => {
+        const teacherUser = await createUser(app, adminCookie);
+        await createTeacher(app, adminCookie, teacherUser.id);
+
+        const teacherCookie = await loginAsUserAndGetCookie(app, teacherUser.login, 'correct-password');
+
+        const res = await app.inject({
+          method: 'GET',
+          url: `/api/teacher/my-students/${teacherUser.id}`,
+          headers: {
+            cookie: teacherCookie
+          }
+        });
+
+        expect(res.statusCode).toBe(200);
+        expect(res.json()).toStrictEqual([]);
+
+        await cleanUpUser(app, adminCookie, teacherUser.id);
       });
     });
   });
