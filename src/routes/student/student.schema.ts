@@ -24,6 +24,5 @@ export const GetTaskTypesReply = z.object({
 
 export const UpdateTaskTypesBody = z.object({
   studentId: z.uuidv4(),
-  action: z.enum(['add', 'remove']),
-  taskType: z.enum(TaskType),
+  taskTypes: z.array(z.enum(TaskType)),
 }).strict();
