@@ -39,68 +39,51 @@ describe('/student', () => {
   });
 
   describe('PATCH /update-task-types', () => {
-    describe('when adding a task type', () => {
-      it('then should add task type and return 200', async () => {
+    describe('when modifying task types', () => {
+      it('then should update task types to the given state and return 200', async () => {
         const teacherUser = await createUser(app, adminCookie);
         await createTeacher(app, adminCookie, teacherUser.id);
 
         const studentUser = await createUser(app, adminCookie);
         const student = await createStudent(app, adminCookie, studentUser.id, teacherUser.id);
 
-        const res = await app.inject({
+        const res1 = await app.inject({
           method: 'PATCH',
           url: '/api/student/update-task-types',
           headers: { Cookie: adminCookie },
           body: {
             studentId: student.id,
-            action: 'add',
-            taskType: 'genitive',
+            taskTypes: ['genitive', 'adverbs'],
           },
         });
 
-        expect(res.statusCode).toBe(200);
+        expect(res1.statusCode).toBe(200);
 
-        const updated = await app.prisma.student.findUniqueOrThrow({
+        const updated1 = await app.prisma.student.findUniqueOrThrow({
           where: { id: student.id },
         });
-        expect(updated.taskTypes).toContain('genitive');
+        expect(updated1.taskTypes).toContain('genitive');
+        expect(updated1.taskTypes).toContain('adverbs');
+        expect(updated1.taskTypes).toHaveLength(2);
 
-        await cleanUpUser(app, adminCookie, studentUser.id);
-        await cleanUpUser(app, adminCookie, teacherUser.id);
-      });
-    });
-
-    describe('when removing a task type', () => {
-      it('then should remove task type and return 200', async () => {
-        const teacherUser = await createUser(app, adminCookie);
-        await createTeacher(app, adminCookie, teacherUser.id);
-
-        const studentUser = await createUser(app, adminCookie);
-        const student = await createStudent(app, adminCookie, studentUser.id, teacherUser.id);
-
-        await app.prisma.student.update({
-          where: { id: student.id },
-          data: { taskTypes: ['genitive', 'stress'] },
-        });
-
-        const res = await app.inject({
+        const res2 = await app.inject({
           method: 'PATCH',
           url: '/api/student/update-task-types',
           headers: { Cookie: adminCookie },
           body: {
             studentId: student.id,
-            action: 'remove',
-            taskType: 'genitive',
+            taskTypes: ['adverbs', 'stress'],
           },
         });
 
-        expect(res.statusCode).toBe(200);
+        expect(res2.statusCode).toBe(200);
 
-        const updated = await app.prisma.student.findUniqueOrThrow({
+        const updated2 = await app.prisma.student.findUniqueOrThrow({
           where: { id: student.id },
         });
-        expect(updated.taskTypes).not.toContain('genitive');
-        expect(updated.taskTypes).toContain('stress');
+        expect(updated2.taskTypes).toContain('adverbs');
+        expect(updated2.taskTypes).toContain('stress');
+        expect(updated2.taskTypes).toHaveLength(2);
 
         await cleanUpUser(app, adminCookie, studentUser.id);
         await cleanUpUser(app, adminCookie, teacherUser.id);
@@ -117,81 +100,13 @@ describe('/student', () => {
           headers: { Cookie: adminCookie },
           body: {
             studentId: nonExistentStudentId,
-            action: 'add',
-            taskType: 'genitive',
+            taskTypes: ['genitive'],
           },
         });
 
         expect(res.statusCode).toBe(404);
         const body = await res.json() as { code: string };
         expect(body.code).toBe('USER_NOT_FOUND');
-      });
-    });
-
-    describe('when adding task type student already has', () => {
-      it('then should return 200 and remain idempotent', async () => {
-        const teacherUser = await createUser(app, adminCookie);
-        await createTeacher(app, adminCookie, teacherUser.id);
-
-        const studentUser = await createUser(app, adminCookie);
-        const student = await createStudent(app, adminCookie, studentUser.id, teacherUser.id);
-
-        await app.prisma.student.update({
-          where: { id: student.id },
-          data: { taskTypes: ['genitive'] },
-        });
-
-        const res = await app.inject({
-          method: 'PATCH',
-          url: '/api/student/update-task-types',
-          headers: { Cookie: adminCookie },
-          body: {
-            studentId: student.id,
-            action: 'add',
-            taskType: 'genitive',
-          },
-        });
-
-        expect(res.statusCode).toBe(200);
-
-        const updated = await app.prisma.student.findUniqueOrThrow({
-          where: { id: student.id },
-        });
-        expect(updated.taskTypes).toEqual(['genitive']);
-
-        await cleanUpUser(app, adminCookie, studentUser.id);
-        await cleanUpUser(app, adminCookie, teacherUser.id);
-      });
-    });
-
-    describe('when removing task type student doesn\'t have', () => {
-      it('then should return 200 and remain idempotent', async () => {
-        const teacherUser = await createUser(app, adminCookie);
-        await createTeacher(app, adminCookie, teacherUser.id);
-
-        const studentUser = await createUser(app, adminCookie);
-        const student = await createStudent(app, adminCookie, studentUser.id, teacherUser.id);
-
-        const res = await app.inject({
-          method: 'PATCH',
-          url: '/api/student/update-task-types',
-          headers: { Cookie: adminCookie },
-          body: {
-            studentId: student.id,
-            action: 'remove',
-            taskType: 'genitive',
-          },
-        });
-
-        expect(res.statusCode).toBe(200);
-
-        const updated = await app.prisma.student.findUniqueOrThrow({
-          where: { id: student.id },
-        });
-        expect(updated.taskTypes).toEqual([]);
-
-        await cleanUpUser(app, adminCookie, studentUser.id);
-        await cleanUpUser(app, adminCookie, teacherUser.id);
       });
     });
   });
