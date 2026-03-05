@@ -28,7 +28,8 @@ export async function updateUserRoutes (app: FastifyZodInstance) {
       },
     }
   }, async (req, reply) => {
-    const user = await updateUser(app.prisma, { ...req.body, id: req.body.studentId });
+    // TODO to refactor
+    const user = await updateUser(app.prisma, { id: req.body.studentId, ...Object.fromEntries(Object.entries(req.body).filter(([key]) => key !== 'studentId')) });
     return reply.status(200).send({ ...user, studentId: req.body.studentId });
   });
 
