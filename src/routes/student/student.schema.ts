@@ -26,3 +26,8 @@ export const UpdateTaskTypesBody = z.object({
   studentId: z.uuidv4(),
   taskTypes: z.array(z.enum(TaskType)),
 }).strict();
+
+export const IncreaseAgeAndAssignTrickyBody = z.object({
+  studentId: z.uuidv4(),
+  age: z.number(),
+}).strict();

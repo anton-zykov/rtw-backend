@@ -1,6 +1,6 @@
 import { z } from 'zod';
-import { CreateStudentBody, CreateStudentReply, DeleteStudentBody, GetTaskTypesParams, GetTaskTypesReply, UpdateTaskTypesBody } from './student.schema.js';
-import { createStudent, deleteStudent, findStudentById, updateTaskTypes } from '#/services/student/index.js';
+import { CreateStudentBody, CreateStudentReply, DeleteStudentBody, GetTaskTypesParams, GetTaskTypesReply, IncreaseAgeAndAssignTrickyBody, UpdateTaskTypesBody } from './student.schema.js';
+import { createStudent, deleteStudent, findStudentById, increaseAgeAndAssignTricky, updateTaskTypes } from '#/services/student/index.js';
 import { AppErrorSchema } from '#/utils/AppError.js';
 import type { FastifyZodInstance } from '#/server.js';
 
@@ -58,6 +58,20 @@ export async function studentRoutes (app: FastifyZodInstance) {
     },
   }, async (req, reply) => {
     await updateTaskTypes(app.prisma, req.body);
+    return reply.status(200).send();
+  });
+
+  app.patch('/increase-age-and-assign-tricky', {
+    preHandler: app.requireOwnTeacherOrAdmin,
+    schema: {
+      body: IncreaseAgeAndAssignTrickyBody,
+      response: {
+        200: z.void(),
+        default: AppErrorSchema
+      },
+    },
+  }, async (req, reply) => {
+    await increaseAgeAndAssignTricky(app.prisma, req.body);
     return reply.status(200).send();
   });
 }

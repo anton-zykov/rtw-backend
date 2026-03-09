@@ -1,9 +1,10 @@
 import { randomUUID } from 'crypto';
 import { loginSuperAdminAndGetCookie } from 'test/helpers/auth.js';
-import { createTeacher, createStudent, createUser, cleanUpUser } from 'test/hooks/index.js';
+import { createTeacher, createStudent, createUser, cleanUpUser, cleanUpTrickyTasks } from 'test/hooks/index.js';
 import { buildTestServer } from 'test/helpers/buildTestServer.js';
 import { prismaClient } from 'test/helpers/prismaClient.js';
 import { createRedisMock } from 'test/helpers/createRedisMock.js';
+import { trickyTasks } from 'test/fixtures/tricky-tasks.js';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 
 describe('/student', () => {
@@ -107,6 +108,76 @@ describe('/student', () => {
         expect(res.statusCode).toBe(404);
         const body = await res.json() as { code: string };
         expect(body.code).toBe('USER_NOT_FOUND');
+      });
+    });
+  });
+
+  describe('PATCH /increase-age-and-assign-tricky', () => {
+    describe('when increasing age and assigning tricky tasks', () => {
+      it('then should increase age and assign tricky tasks and return 200', async () => {
+        const teacherUser = await createUser(app, adminCookie);
+        await createTeacher(app, adminCookie, teacherUser.id);
+
+        const studentUser = await createUser(app, adminCookie);
+        const student = await createStudent(app, adminCookie, studentUser.id, teacherUser.id);
+
+        const createTasksRes = await app.inject({
+          method: 'POST',
+          url: '/api/tricky-task/pool/create',
+          headers: { Cookie: adminCookie },
+          body: trickyTasks,
+        });
+        expect(createTasksRes.statusCode).toBe(201);
+        const createdTasks = (await createTasksRes.json()) as { id: string }[];
+        const taskIds = createdTasks.map(t => t.id);
+
+        const res = await app.inject({
+          method: 'PATCH',
+          url: '/api/student/increase-age-and-assign-tricky',
+          headers: { Cookie: adminCookie },
+          body: {
+            studentId: student.id,
+            age: 1,
+          },
+        });
+
+        expect(res.statusCode).toBe(200);
+
+        const class1Student = await app.prisma.student.findUniqueOrThrow({
+          where: { id: student.id },
+        });
+        expect(class1Student.age).toBe(1);
+
+        const class1TrickyTasks = await app.prisma.studentTrickyTask.findMany({
+          where: { studentId: student.id },
+        });
+        expect(class1TrickyTasks).toHaveLength(trickyTasks.filter(t => t.age <= 1).length);
+
+        const res2 = await app.inject({
+          method: 'PATCH',
+          url: '/api/student/increase-age-and-assign-tricky',
+          headers: { Cookie: adminCookie },
+          body: {
+            studentId: student.id,
+            age: 8,
+          },
+        });
+
+        expect(res2.statusCode).toBe(200);
+
+        const class8Student = await app.prisma.student.findUniqueOrThrow({
+          where: { id: student.id },
+        });
+        expect(class8Student.age).toBe(8);
+
+        const class8TrickyTasks = await app.prisma.studentTrickyTask.findMany({
+          where: { studentId: student.id },
+        });
+        expect(class8TrickyTasks).toHaveLength(trickyTasks.filter(t => t.age <= 8).length);
+
+        await cleanUpTrickyTasks(app, adminCookie, taskIds);
+        await cleanUpUser(app, adminCookie, studentUser.id);
+        await cleanUpUser(app, adminCookie, teacherUser.id);
       });
     });
   });

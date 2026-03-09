@@ -245,7 +245,7 @@ describe('/teacher', () => {
           fullName: studentUser.fullName,
           email: studentUser.email,
           telegramId: studentUser.telegramId,
-          taskTypes: []
+          taskTypes: ['tricky']
         });
 
         await cleanUpUser(app, adminCookie, studentUser.id);
