@@ -22,7 +22,12 @@ export async function createStudent (
 
     const [student] = await prisma.$transaction([
       prisma.student.create({
-        data: input,
+        data: {
+          id: input.id,
+          teacherId: input.teacherId,
+          age: 0,
+          taskTypes: ['tricky'],
+        },
       }),
       prisma.user.update({
         where: {
