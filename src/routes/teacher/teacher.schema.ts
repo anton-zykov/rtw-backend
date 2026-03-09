@@ -20,6 +20,7 @@ export const GetMyStudentsParams = z.object({
 export const GetMyStudentsReply = z.array(z.object({
   id: z.uuidv4(),
   login: z.string(),
+  age: z.number(),
   active: z.boolean(),
   fullName: z.string().nullable(),
   email: z.email().nullable(),

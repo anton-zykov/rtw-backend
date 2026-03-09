@@ -6,7 +6,7 @@ export async function getMyStudents (
     teacherId: string;
   }
 ): Promise<(
-  Pick<Student, 'id' | 'taskTypes'> &
+  Pick<Student, 'id' | 'age' | 'taskTypes'> &
   Pick<User, 'id' | 'login' | 'active' | 'fullName' | 'email' | 'telegramId'>
 )[]> {
   const students = await prisma.student.findMany({
@@ -30,6 +30,7 @@ export async function getMyStudents (
   return students.map((student) => ({
     id: student.id,
     login: student.user.login,
+    age: student.age,
     active: student.user.active,
     fullName: student.user.fullName,
     email: student.user.email,
