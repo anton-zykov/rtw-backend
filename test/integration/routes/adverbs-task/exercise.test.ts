@@ -204,6 +204,12 @@ describe('/adverbs-task/exercise', () => {
         expect(firstResult.correct).toBe(true);
         expect(secondResult.correct).toBe(false);
 
+        const updatedStudent = await app.prisma.student.findUniqueOrThrow({
+          where: { id: student.id },
+        });
+        expect(updatedStudent.adverbsTrainings).toHaveLength(1);
+        expect(updatedStudent.adverbsTrainings[0]).toBeInstanceOf(Date);
+
         await cleanUpAdverbsTasks(app, adminCookie, taskIds);
         await cleanUpUser(app, adminCookie, studentUser.id);
         await cleanUpUser(app, adminCookie, teacherUser.id);

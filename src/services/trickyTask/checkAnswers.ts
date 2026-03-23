@@ -46,8 +46,8 @@ export async function checkAnswers (
     };
   });
 
-  await prisma.$transaction(
-    dbUpdates.map(u => prisma.studentTrickyTask.update({
+  await prisma.$transaction([
+    ...dbUpdates.map(u => prisma.studentTrickyTask.update({
       where: {
         studentId_taskId: {
           studentId: u.studentId,
@@ -55,8 +55,18 @@ export async function checkAnswers (
         }
       },
       data: u
-    }))
-  );
+    })),
+    prisma.student.update({
+      where: {
+        id: input.userId
+      },
+      data: {
+        trickyTrainings: {
+          push: new Date()
+        }
+      }
+    })
+  ]);
 
   await redis.del(`${input.userId}:tricky`);
 

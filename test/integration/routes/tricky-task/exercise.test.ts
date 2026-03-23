@@ -212,6 +212,12 @@ describe('/tricky-task/exercise', () => {
         expect(firstResult.correct).toBe(true);
         expect(secondResult.correct).toBe(false);
 
+        const updatedStudent = await app.prisma.student.findUniqueOrThrow({
+          where: { id: student.id },
+        });
+        expect(updatedStudent.trickyTrainings).toHaveLength(1);
+        expect(updatedStudent.trickyTrainings[0]).toBeInstanceOf(Date);
+
         await cleanUpTrickyTasks(app, adminCookie, taskIds);
         await cleanUpUser(app, adminCookie, studentUser.id);
         await cleanUpUser(app, adminCookie, teacherUser.id);

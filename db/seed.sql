@@ -6,11 +6,9 @@ TRUNCATE TABLE
   "Teacher",
   "Student",
   "Admin",
-  "GenitiveTask",
+  "StudentAdverbsTask",
   "StudentGenitiveTask",
-  "StressTask",
   "StudentStressTask",
-  "TrickyTask",
   "StudentTrickyTask"
 RESTART IDENTITY CASCADE;
 
@@ -22,30 +20,18 @@ INSERT INTO "User" (id, login, "passwordHash", "role") VALUES
 
 INSERT INTO "Admin" (id) VALUES ('d6ff850c-5e8c-466d-95d9-03be8d383534');
 INSERT INTO "Teacher" (id) VALUES ('13c88df2-b3de-4de5-a476-31985427a5a6');
-INSERT INTO "Student" (id, "teacherId", "taskTypes") VALUES ('b53b7776-3a9e-4cfb-9dbc-1a24af5234df', '13c88df2-b3de-4de5-a476-31985427a5a6', ARRAY['genitive', 'stress', 'tricky']::"TaskType"[]);
+INSERT INTO "Student" (id, "teacherId", "age") VALUES ('b53b7776-3a9e-4cfb-9dbc-1a24af5234df', '13c88df2-b3de-4de5-a476-31985427a5a6', 0);
 
-INSERT INTO "GenitiveTask" (id, nominative, options) VALUES
-  ('051b6988-1bec-4697-8e61-f73e34fb4148', 'инженер', '[{"word": "инженеры", "correct": true}, {"word": "инженера", "correct": false}]'),
-  ('1cfcea9e-99d8-464f-8437-073ee530052b', 'компьютер', '[{"word": "компьютеры", "correct": true}, {"word": "компьютера", "correct": false}]'),
-  ('0faa7203-8742-4bcb-9d32-fb3d88083c44', 'крем', '[{"word": "кремы", "correct": true}, {"word": "крема", "correct": false}]'),
-  ('f722f86e-14f8-4ef9-9e50-83de454c1551', 'возраст', '[{"word": "возрасты", "correct": true}, {"word": "возраста", "correct": false}]'),
-  ('e24ca05f-7d4e-418b-9049-bb94b62d78e5', 'повар', '[{"word": "повара", "correct": true}, {"word": "повары", "correct": false}]'),
-  ('5de3756a-028d-40dc-91eb-74397440e741', 'мастер', '[{"word": "мастера", "correct": true}, {"word": "мастеры", "correct": false}]'),
-  ('5ed89502-59d8-44af-a4f8-d36b8754e703', 'оладья', '[{"word": "оладий", "correct": true}, {"word": "оладьев", "correct": false}]'),
-  ('66c77285-3c27-46a4-a3f9-65f72ec51096', 'сандалия', '[{"word": "сандалий", "correct": true}, {"word": "сандалиев", "correct": false}]'),
-  ('499549f1-8013-4a4b-8557-12a8c4488f62', 'судья', '[{"word": "судей", "correct": true}, {"word": "судьей", "correct": false}]'),
-  ('55634785-bed4-4150-89b0-a60879f5e1d4', 'копье', '[{"word": "копий", "correct": true}, {"word": "копьев", "correct": false}]');
-
-INSERT INTO "StudentGenitiveTask" ("studentId", "taskId", "weight") VALUES
-  ('b53b7776-3a9e-4cfb-9dbc-1a24af5234df', '051b6988-1bec-4697-8e61-f73e34fb4148', 10),
-  ('b53b7776-3a9e-4cfb-9dbc-1a24af5234df', '1cfcea9e-99d8-464f-8437-073ee530052b', 10),
-  ('b53b7776-3a9e-4cfb-9dbc-1a24af5234df', '0faa7203-8742-4bcb-9d32-fb3d88083c44', 5),
-  ('b53b7776-3a9e-4cfb-9dbc-1a24af5234df', 'f722f86e-14f8-4ef9-9e50-83de454c1551', 5),
-  ('b53b7776-3a9e-4cfb-9dbc-1a24af5234df', 'e24ca05f-7d4e-418b-9049-bb94b62d78e5', 5),
-  ('b53b7776-3a9e-4cfb-9dbc-1a24af5234df', '5de3756a-028d-40dc-91eb-74397440e741', 5),
-  ('b53b7776-3a9e-4cfb-9dbc-1a24af5234df', '5ed89502-59d8-44af-a4f8-d36b8754e703', 5),
-  ('b53b7776-3a9e-4cfb-9dbc-1a24af5234df', '66c77285-3c27-46a4-a3f9-65f72ec51096', 5),
-  ('b53b7776-3a9e-4cfb-9dbc-1a24af5234df', '499549f1-8013-4a4b-8557-12a8c4488f62', 1),
-  ('b53b7776-3a9e-4cfb-9dbc-1a24af5234df', '55634785-bed4-4150-89b0-a60879f5e1d4', 1);
+-- INSERT INTO "StudentAdverbsTask" ("studentId", "taskId", "weight") VALUES
+--   ('b53b7776-3a9e-4cfb-9dbc-1a24af5234df', '12c2dfd7-f8d5-4a98-8fbd-5e4007ede2d6', 10),
+--   ('b53b7776-3a9e-4cfb-9dbc-1a24af5234df', '6aa9f0e0-eaaf-4c9d-8f2c-d36f6ceb975d', 10),
+--   ('b53b7776-3a9e-4cfb-9dbc-1a24af5234df', '95b91b21-64f8-4b76-86d7-59daae4689e9', 5),
+--   ('b53b7776-3a9e-4cfb-9dbc-1a24af5234df', '1e22dedb-7f4b-4e2c-a000-fe410b0db846', 5),
+--   ('b53b7776-3a9e-4cfb-9dbc-1a24af5234df', '80e59c12-f669-4696-abf9-78b64b160c7b', 5),
+--   ('b53b7776-3a9e-4cfb-9dbc-1a24af5234df', '23d4dbba-f75b-4fbb-94d2-9af3dfa361f9', 5),
+--   ('b53b7776-3a9e-4cfb-9dbc-1a24af5234df', 'ac91bbe4-b39e-45d7-b01f-d8c6d9898073', 5),
+--   ('b53b7776-3a9e-4cfb-9dbc-1a24af5234df', 'a3a136f1-20d6-43a6-9d55-e39018f77e6d', 5),
+--   ('b53b7776-3a9e-4cfb-9dbc-1a24af5234df', '1f3788b7-3eb2-4994-8715-026942c10200', 1),
+--   ('b53b7776-3a9e-4cfb-9dbc-1a24af5234df', '280af36c-3a66-483e-a36f-21aa695c1750', 1);
 
 COMMIT;

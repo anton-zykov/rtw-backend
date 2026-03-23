@@ -209,6 +209,12 @@ describe('/genitive-task/exercise', () => {
         expect(firstResult.correct).toBe(true);
         expect(secondResult.correct).toBe(false);
 
+        const updatedStudent = await app.prisma.student.findUniqueOrThrow({
+          where: { id: student.id },
+        });
+        expect(updatedStudent.genitiveTrainings).toHaveLength(1);
+        expect(updatedStudent.genitiveTrainings[0]).toBeInstanceOf(Date);
+
         await cleanUpGenitiveTasks(app, adminCookie, taskIds);
         await cleanUpUser(app, adminCookie, studentUser.id);
         await cleanUpUser(app, adminCookie, teacherUser.id);

@@ -6,7 +6,7 @@ export async function createUser (
   app: FastifyZodInstance,
   adminCookie: string
 ) {
-  const random = Math.floor(Math.random() * 1000);
+  const random = Math.floor(Math.random() * 100000);
   return (await app.inject({
     method: 'POST',
     url: '/api/user/create',

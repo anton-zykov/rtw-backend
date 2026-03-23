@@ -1,0 +1,8 @@
+---
+description: Testing rules for unit and integration tests
+globs: *.test.ts
+alwaysApply: false
+---
+# Testing rules
+
+- Always run cleanup functions in each test for each entity that was created in the test and that was not deleted by the test design itself.

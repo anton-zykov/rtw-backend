@@ -35,16 +35,20 @@ enum TaskType {
 }
 
 model Student {
-  id            String                @unique @db.Uuid
-  age           Int                   @default(0)
-  user          User                  @relation(fields: [id], references: [id], onDelete: Cascade)
-  teacherId     String                @db.Uuid
-  teacher       Teacher               @relation(fields: [teacherId], references: [id], onDelete: Cascade)
-  taskTypes     TaskType[]            @default([])
-  adverbsTasks  StudentAdverbsTask[]
-  genitiveTasks StudentGenitiveTask[]
-  stressTasks   StudentStressTask[]
-  trickyTasks   StudentTrickyTask[]
+  id                String                @unique @db.Uuid
+  age               Int                   @default(0)
+  user              User                  @relation(fields: [id], references: [id], onDelete: Cascade)
+  teacherId         String                @db.Uuid
+  teacher           Teacher               @relation(fields: [teacherId], references: [id], onDelete: Cascade)
+  taskTypes         TaskType[]            @default([])
+  adverbsTasks      StudentAdverbsTask[]
+  adverbsTrainings  DateTime[]
+  genitiveTasks     StudentGenitiveTask[]
+  genitiveTrainings DateTime[]
+  stressTasks       StudentStressTask[]
+  stressTrainings   DateTime[]
+  trickyTasks       StudentTrickyTask[]
+  trickyTrainings   DateTime[]
 }
 
 model Teacher {

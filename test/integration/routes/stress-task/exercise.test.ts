@@ -203,6 +203,12 @@ describe('/stress-task/exercise', () => {
         expect(firstResult.correct).toBe(true);
         expect(secondResult.correct).toBe(false);
 
+        const updatedStudent = await app.prisma.student.findUniqueOrThrow({
+          where: { id: student.id },
+        });
+        expect(updatedStudent.stressTrainings).toHaveLength(1);
+        expect(updatedStudent.stressTrainings[0]).toBeInstanceOf(Date);
+
         await cleanUpStressTasks(app, adminCookie, taskIds);
         await cleanUpUser(app, adminCookie, studentUser.id);
         await cleanUpUser(app, adminCookie, teacherUser.id);
